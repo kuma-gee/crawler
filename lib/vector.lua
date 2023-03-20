@@ -34,6 +34,7 @@ vector.__index = vector
 local function new(x, y)
 	return setmetatable({ x = x or 0, y = y or 0 }, vector)
 end
+
 local zero = new(0, 0)
 local up = new(0, -1)
 local down = new(0, 1)
@@ -124,9 +125,9 @@ function vector.__le(a, b)
 	return a.x <= b.x and a.y <= b.y
 end
 
-function vector.permul(a, b)
-	assert(isvector(a) and isvector(b), "permul: wrong argument types (<vector> expected)")
-	return new(a.x * b.x, a.y * b.y)
+function vector:permul(b)
+	assert(isvector(b), "permul: wrong argument types (<vector> expected)")
+	return new(self.x * b.x, self.y * b.y)
 end
 
 function vector:toPolar()

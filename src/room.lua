@@ -33,7 +33,7 @@ function Room:canMove(dir)
 	return false
 end
 
-function Room:draw(active_pos)
+function Room:draw()
 	local background = self:_getBackground()
 
 	local scaleX = love.graphics.getWidth() / background:getWidth()
@@ -58,13 +58,12 @@ function Room:_getBackground()
 	return letter_to_image[letters]
 end
 
-function Room:_draw_map(active_pos)
-	local size = Vector(50, 50)
+function Room:draw_map(active_pos, size, offset)
 	local function to_world(v)
-		return Vector(v.x * size.x, v.y * size.y)
+		return v:permul(size)
 	end
 
-	local pos = to_world(self.pos)
+	local pos = to_world(self.pos) + offset
 	local lines = {}
 	if not self:canMove(Vector.UP) then
 		table.insert(lines, { pos, pos + to_world(Vector.RIGHT) })
