@@ -1,6 +1,24 @@
 local Room = {}
 Room.__index = Room
 
+local dir_to_letter = {
+	[Vector.DOWN] = 'S',
+	[Vector.LEFT] = 'W',
+	[Vector.RIGHT] = 'E',
+	[Vector.UP] = 'N',
+}
+
+local letter_to_image = {
+	['N'] = love.graphics.newImage('assets/Walls_N_0.png', {}),
+	['E'] = love.graphics.newImage('assets/Walls_E_0.png', {}),
+	['W'] = love.graphics.newImage('assets/Walls_W_0.png', {}),
+	['S'] = love.graphics.newImage('assets/Walls_S_0.png', {}),
+	['NW'] = love.graphics.newImage('assets/Walls_NW_0.png', {}),
+	['NE'] = love.graphics.newImage('assets/Walls_NE_0.png', {}),
+	['NEW'] = love.graphics.newImage('assets/Walls_NEW_0.png', {}),
+	['EW'] = love.graphics.newImage('assets/Walls_EW_0.png', {}),
+}
+
 function Room.new(p, d)
 	return setmetatable({ pos = p, doors = d }, Room)
 end
@@ -16,11 +34,35 @@ function Room:canMove(dir)
 end
 
 function Room:draw(active_pos)
+	local background = self:_getBackground()
+
+	local scaleX = love.graphics.getWidth() / background:getWidth()
+	local scaleY = love.graphics.getHeight() / background:getHeight()
+	love.graphics.draw(background, love.math.newTransform(0, 0, 0, scaleX, scaleY))
+end
+
+function Room:_getBackground()
+	local letters = ''
+
+	for k, v in pairs(dir_to_letter) do
+		if self:canMove(k) then
+			letters = letters .. v
+		end
+	end
+
+	if string.len(letters) > 1 and string.find(letters, 'S') then
+		letters = string.gsub(letters, 'S', '')
+	end
+
+
+	return letter_to_image[letters]
+end
+
+function Room:_draw_map(active_pos)
 	local size = Vector(50, 50)
 	local function to_world(v)
 		return Vector(v.x * size.x, v.y * size.y)
 	end
-
 
 	local pos = to_world(self.pos)
 	local lines = {}
@@ -37,7 +79,10 @@ function Room:draw(active_pos)
 		table.insert(lines, { pos + to_world(Vector.RIGHT), pos + to_world(Vector.DOWN + Vector.RIGHT) })
 	end
 
-	love.graphics.setColor(255, 255, 255, 255)
+	love.graphics.setColor(1, 1, 1, 0.3)
+	love.graphics.rectangle('fill', pos.x, pos.y, size.x, size.y)
+
+	love.graphics.setColor(1, 1, 1, 1)
 	for _, points in ipairs(lines) do
 		local p1 = points[1]
 		local p2 = points[2]
@@ -46,7 +91,7 @@ function Room:draw(active_pos)
 
 	if active_pos == self.pos then
 		local center = pos + size / 2
-		love.graphics.setColor(0, 255, 0, 255)
+		love.graphics.setColor(0, 1, 0, 1)
 		love.graphics.circle('fill', center.x, center.y, 2)
 	end
 end

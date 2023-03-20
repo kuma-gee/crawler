@@ -8,6 +8,9 @@ local text
 
 function love.load()
     love.graphics.setNewFont(12)
+    love.graphics.setBackgroundColor(0.14, 0.10, 0.08)
+
+
     text = "Nothing yet"
 
     -- math.randomseed(os.time())

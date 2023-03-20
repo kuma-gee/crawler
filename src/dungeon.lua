@@ -65,7 +65,11 @@ end
 
 function Dungeon:_calcDirections(init_dir)
 	local result = {}
-	local initial = { init_dir }
+	local initial = {}
+
+	if not (init_dir == Vector.ZERO) then
+		table.insert(initial, init_dir)
+	end
 
 	for _, dir in ipairs(move_dirs) do
 		local neighbor = self.pos + dir
