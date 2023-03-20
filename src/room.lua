@@ -17,22 +17,37 @@ end
 
 function Room:draw(active_pos)
 	local size = Vector(50, 50)
-	local room_pos = Vector(self.pos.x * size.x, self.pos.y * size.y)
-
-	if active_pos == self.pos then
-		love.graphics.setColor(255, 0, 0, 255)
-	else
-		love.graphics.setColor(255, 255, 255, 255)
+	local function to_world(v)
+		return Vector(v.x * size.x, v.y * size.y)
 	end
 
-	love.graphics.rectangle('line', room_pos.x, room_pos.y, size.x, size.y)
 
-	local center = room_pos + size / 2
-	for _, door in pairs(self.doors) do
+	local pos = to_world(self.pos)
+	local lines = {}
+	if not self:canMove(Vector.UP) then
+		table.insert(lines, { pos, pos + to_world(Vector.RIGHT) })
+	end
+	if not self:canMove(Vector.LEFT) then
+		table.insert(lines, { pos, pos + to_world(Vector.DOWN) })
+	end
+	if not self:canMove(Vector.DOWN) then
+		table.insert(lines, { pos + to_world(Vector.DOWN), pos + to_world(Vector.DOWN + Vector.RIGHT) })
+	end
+	if not self:canMove(Vector.RIGHT) then
+		table.insert(lines, { pos + to_world(Vector.RIGHT), pos + to_world(Vector.DOWN + Vector.RIGHT) })
+	end
+
+	love.graphics.setColor(255, 255, 255, 255)
+	for _, points in ipairs(lines) do
+		local p1 = points[1]
+		local p2 = points[2]
+		love.graphics.line(p1.x, p1.y, p2.x, p2.y)
+	end
+
+	if active_pos == self.pos then
+		local center = pos + size / 2
 		love.graphics.setColor(0, 255, 0, 255)
-
-		local door_pos = center + Vector(door.x * size.x / 2, door.y * size.y / 2)
-		love.graphics.circle('fill', door_pos.x, door_pos.y, 2)
+		love.graphics.circle('fill', center.x, center.y, 2)
 	end
 end
 
