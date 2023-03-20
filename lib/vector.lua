@@ -23,7 +23,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]
-   --
+--
 
 local assert = assert
 local sqrt, cos, sin, atan2 = math.sqrt, math.cos, math.sin, math.atan2
@@ -35,6 +35,10 @@ local function new(x, y)
 	return setmetatable({ x = x or 0, y = y or 0 }, vector)
 end
 local zero = new(0, 0)
+local up = new(0, -1)
+local down = new(0, 1)
+local left = new(-1, 0)
+local right = new(1, 0)
 
 local function fromPolar(angle, radius)
 	radius = radius or 1
@@ -65,6 +69,16 @@ function vector:unpack()
 end
 
 function vector:__tostring()
+	if self == up then
+		return "UP"
+	elseif self == down then
+		return "DOWN"
+	elseif self == left then
+		return "LEFT"
+	elseif self == right then
+		return "RIGHT"
+	end
+
 	return "(" .. tonumber(self.x) .. "," .. tonumber(self.y) .. ")"
 end
 
@@ -212,7 +226,11 @@ return setmetatable({
 	fromPolar       = fromPolar,
 	randomDirection = randomDirection,
 	isvector        = isvector,
-	zero            = zero
+	ZERO            = zero,
+	UP              = up,
+	DOWN            = down,
+	LEFT            = left,
+	RIGHT           = right,
 }, {
 	__call = function(_, ...) return new(...) end
 })

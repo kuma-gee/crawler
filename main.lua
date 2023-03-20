@@ -1,7 +1,8 @@
-Vector = require "library.vector"
-Signal = require "library.signal"
+Vector = require "lib.vector"
+Signal = require "lib.signal"
 
 local Player = require "src.player"
+local Dungeon = require 'src.dungeon'
 
 local text
 
@@ -9,11 +10,24 @@ function love.load()
     love.graphics.setNewFont(12)
     text = "Nothing yet"
 
-    Player.move:register(function(dir) text = tostring(dir) end)
+    -- math.randomseed(os.time())
+
+    Player.move:register(function(dir)
+        Dungeon:move(dir)
+
+        local room = Dungeon:activeRoom()
+        text = tostring(room.pos) .. "\n"
+
+        for _, d in ipairs(room.doors) do
+            text = text .. tostring(d) .. ", "
+        end
+    end)
 end
 
 function love.draw()
-    love.graphics.print(text, 330, 300)
+    love.graphics.print(text, 0, 0)
+
+    Dungeon:draw()
 end
 
 function love.update(dt)

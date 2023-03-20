@@ -17,4 +17,6 @@ function Player:keypressed(key)
 	end
 end
 
-return Player.new()
+local default = Player.new()
+
+return default
