@@ -3,12 +3,11 @@ local Label = setmetatable({}, { __index = Widget.new() })
 Label.__index = Label
 
 function Label.new(t)
-	return setmetatable({ text = t }, Label)
+	return setmetatable({ text = t, _textColor = { 0, 0, 0, 1 } }, Label)
 end
 
 function Label:update()
 	self:_updateSizeForText()
-	print("Label: "..tostring(self:getOuterSize()))
 end
 
 function Label:_updateSizeForText()
@@ -24,9 +23,18 @@ end
 function Label:draw()
 	local innerPos = self:getInnerTopLeftCorner()
 	local innerSize = self:getInnerSize()
-	love.graphics.printf(self.text, innerPos.x, innerPos.y, innerSize.x, "center")
 
-	Widget.draw(self)
+	self:drawInColor(self._textColor, function()
+		love.graphics.printf(self.text, innerPos.x, innerPos.y, innerSize.x, "center")
+	end)
+end
+
+function Label:setTheme(theme)
+	Widget.setTheme(self, theme)
+
+	if theme.color then
+		self._textColor = theme.color
+	end
 end
 
 return Label

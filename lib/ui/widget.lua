@@ -21,22 +21,6 @@ function Widget:_getLeftPadding()
 	return self._pad[4]
 end
 
-function Widget:setPadding(v)
-	if type(v) == 'table' then
-		if #v >= 4 then
-			self._pad = { v[1], v[2], v[3], v[4] }
-		elseif #v >= 2 then
-			self._pad = { v[1], v[2], v[1], v[2] }
-		else
-			self._pad = { v[1], v[1], v[1], v[1] }
-		end
-	else
-		self._pad = { v, v, v, v }
-	end
-
-	return self
-end
-
 function Widget:getOuterSize()
 	return Vector(
 		self._size.x + self:_getLeftPadding() + self:_getRightPadding(),
@@ -72,6 +56,37 @@ function Widget:getMousePosition()
 	return Vector(love.mouse.getX(), love.mouse.getY())
 end
 
+function Widget:drawInColor(col, fn)
+	local c = col or { 0, 0, 0, 1 }
+	local r, g, b, a = love.graphics.getColor()
+	love.graphics.setColor(c[1], c[2], c[3], c[4])
+	fn()
+	love.graphics.setColor(r, g, b, a)
+end
+
+-- Theme related
+
+function Widget:setTheme(theme)
+	self:setPadding(theme.padding)
+	return self
+end
+
+function Widget:setPadding(v)
+	if type(v) == 'table' then
+		if #v >= 4 then
+			self._pad = { v[1], v[2], v[3], v[4] }
+		elseif #v >= 2 then
+			self._pad = { v[1], v[2], v[1], v[2] }
+		else
+			self._pad = { v[1], v[1], v[1], v[1] }
+		end
+	elseif not (v == nil) then
+		self._pad = { v, v, v, v }
+	end
+
+	return self
+end
+
 -- Override in sub classes if needed
 
 function Widget:mousepressed(...) end
@@ -79,16 +94,12 @@ function Widget:mousepressed(...) end
 function Widget:mousereleased(...) end
 
 function Widget:draw()
-	local r, g, b, a = love.graphics.getColor()
+	self:drawInColor(self.debugColor, function()
+		love.graphics.circle('fill', self._pos.x, self._pos.y, 5)
 
-	local col = self.debugColor
-	love.graphics.setColor(col[1], col[2], col[3], col[4])
-	love.graphics.circle('fill', self._pos.x, self._pos.y, 5)
-
-	local botRight = self:getBottomRightCorner()
-	love.graphics.circle('fill', botRight.x, botRight.y, 5)
-
-	love.graphics.setColor(r, g, b, a)
+		local botRight = self:getBottomRightCorner()
+		love.graphics.circle('fill', botRight.x, botRight.y, 5)
+	end)
 end
 
 function Widget:update() end

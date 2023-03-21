@@ -3,7 +3,7 @@ local Button = setmetatable({}, { __index = Container.new() })
 Button.__index = Button
 
 function Button.new()
-	local btn = setmetatable({ isHover = false, isPressed = false, onClick = Signal(), text = "" }, Button)
+	local btn = setmetatable({ isHover = false, isPressed = false, onClick = Signal(), _bgColor = { 0, 0, 0, 0 } }, Button)
 	btn:setDirection(Container.Direction.ROW)
 	return btn
 end
@@ -11,7 +11,6 @@ end
 function Button:update()
 	Container.update(self)
 	self:_updateHover()
-	print("Button: " .. tostring(self:getOuterSize()))
 end
 
 function Button:_updateHover()
@@ -42,12 +41,23 @@ function Button:mousereleased(x, y, button)
 end
 
 function Button:draw()
-	Container.draw(self)
-
 	local pos = self:getTopLeftCorner()
 	local size = self:getOuterSize()
 
-	love.graphics.rectangle("line", pos.x, pos.y, size.x, size.y)
+	self:drawInColor(self._bgColor, function()
+		love.graphics.rectangle("fill", pos.x, pos.y, size.x, size.y)
+	end)
+
+	Container.draw(self)
+end
+
+function Button:setTheme(theme)
+	print(theme)
+	if theme.background then
+		self._bgColor = theme.background
+	end
+
+	return Container.setTheme(self, theme)
 end
 
 return Button

@@ -1,17 +1,18 @@
 local Button = require 'lib.ui.button'
 local Container = require 'lib.ui.container'
 local Label = require 'lib.ui.label'
+local Theme = require 'lib.ui.theme'
 
 local Player = require "src.player"
 local Dungeon = require 'src.dungeon'
 
-local text
+local theme = Theme({ background = { 1, 0, 0, 1 }, padding = 10 })
+
 local root =
 Container.new()
-    :setPadding({ 10, 20 })
     :addChild(
         Button.new()
-        :setPadding({ 10 })
+        :setTheme(theme)
         :addChild(Label.new("Hello"))
         :addChild(Label.new("World"))
     )

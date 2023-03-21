@@ -3,6 +3,7 @@ local Container = setmetatable({}, { __index = Widget.new() })
 Container.__index = Container
 
 local Direction = { ROW = 'row', COL = 'col' }
+local Align = {}
 
 function Container.new()
 	return setmetatable({ _dir = Direction.COL, _children = {} }, Container)
@@ -57,6 +58,10 @@ function Container:mousereleased(...)
 	for _, child in ipairs(self._children) do
 		child:mousereleased(...)
 	end
+end
+
+function Container:setTheme(theme)
+	return Widget.setTheme(self, theme)
 end
 
 return setmetatable({ Direction = Direction }, Container)
