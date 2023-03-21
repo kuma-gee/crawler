@@ -1,15 +1,15 @@
 local Widget = require 'lib.ui.widget'
-local Container = setmetatable({ children = {} }, { __index = Widget })
+local Container = setmetatable({}, { __index = Widget.new() })
 Container.__index = Container
 
 local Direction = { ROW = 'row', COL = 'col' }
 
 function Container.new()
-	return setmetatable({ _dir = Direction.COL }, Container)
+	return setmetatable({ _dir = Direction.COL, _children = {} }, Container)
 end
 
 function Container:addChild(child)
-	table.insert(self.children, child)
+	table.insert(self._children, child)
 	return self
 end
 
@@ -19,9 +19,9 @@ end
 
 function Container:update()
 	local size = Vector(0, 0)
-	local currPos = self:getTopLeftCorner():clone()
+	local currPos = self:getInnerTopLeftCorner():clone()
 
-	for _, child in ipairs(self.children) do
+	for _, child in ipairs(self._children) do
 		child:setTopLeftCorner(currPos:clone())
 		child:update()
 
@@ -29,12 +29,12 @@ function Container:update()
 
 		if self._dir == Direction.ROW then
 			size.y = math.max(size.y, childSize.y)
-			size.x = currPos.y + childSize.x
-			currPos.x = size.x
+			size.x = size.x + childSize.x
+			currPos.x = currPos.x + childSize.x
 		else
 			size.x = math.max(size.x, childSize.x)
-			size.y = currPos.y + childSize.y
-			currPos.y = size.y
+			size.y = size.y + childSize.y
+			currPos.y = currPos.y + childSize.y
 		end
 	end
 
@@ -42,19 +42,19 @@ function Container:update()
 end
 
 function Container:draw()
-	for _, child in ipairs(self.children) do
+	for _, child in ipairs(self._children) do
 		child:draw()
 	end
 end
 
 function Container:mousepressed(...)
-	for _, child in ipairs(self.children) do
+	for _, child in ipairs(self._children) do
 		child:mousepressed(...)
 	end
 end
 
 function Container:mousereleased(...)
-	for _, child in ipairs(self.children) do
+	for _, child in ipairs(self._children) do
 		child:mousereleased(...)
 	end
 end

@@ -1,5 +1,5 @@
 local Container = require 'lib.ui.container'
-local Button = setmetatable({}, { __index = Container })
+local Button = setmetatable({}, { __index = Container.new() })
 Button.__index = Button
 
 function Button.new()
@@ -11,6 +11,7 @@ end
 function Button:update()
 	Container.update(self)
 	self:_updateHover()
+	print("Button: " .. tostring(self:getOuterSize()))
 end
 
 function Button:_updateHover()

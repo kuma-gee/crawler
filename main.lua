@@ -6,21 +6,23 @@ local Player = require "src.player"
 local Dungeon = require 'src.dungeon'
 
 local text
-local root = Button.new()
+local root =
+Container.new()
+    :setPadding({ 10, 20 })
     :addChild(
-        Label.new("Hello World")
+        Button.new()
+        :setPadding({ 10 })
+        :addChild(Label.new("Hello"))
+        :addChild(Label.new("World"))
     )
 
--- Container.new()
---     :addChild(
---     )
 
 function love.load()
     love.graphics.setNewFont(12)
     love.graphics.setBackgroundColor(0.14, 0.10, 0.08)
 
 
-    text = "Nothing yet"
+    -- text = "Nothing yet"
     root:update()
 
     -- math.randomseed(os.time())
@@ -28,17 +30,17 @@ function love.load()
     Player.onMove:register(function(dir)
         Dungeon:move(dir)
 
-        local room = Dungeon:activeRoom()
-        text = tostring(room.pos) .. "\n"
+        -- local room = Dungeon:activeRoom()
+        -- text = tostring(room.pos) .. "\n"
 
-        for _, d in ipairs(room.doors) do
-            text = text .. tostring(d) .. ", "
-        end
+        -- for _, d in ipairs(room.doors) do
+        --     text = text .. tostring(d) .. ", "
+        -- end
     end)
 end
 
 function love.draw()
-    love.graphics.print(text, 0, 0)
+    -- love.graphics.print(text, 0, 0)
 
     Dungeon:draw()
     root:draw()

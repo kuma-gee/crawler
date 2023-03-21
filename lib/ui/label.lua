@@ -1,5 +1,5 @@
 local Widget = require 'lib.ui.widget'
-local Label = setmetatable({}, { __index = Widget })
+local Label = setmetatable({}, { __index = Widget.new() })
 Label.__index = Label
 
 function Label.new(t)
@@ -8,6 +8,7 @@ end
 
 function Label:update()
 	self:_updateSizeForText()
+	print("Label: "..tostring(self:getOuterSize()))
 end
 
 function Label:_updateSizeForText()
@@ -24,6 +25,8 @@ function Label:draw()
 	local innerPos = self:getInnerTopLeftCorner()
 	local innerSize = self:getInnerSize()
 	love.graphics.printf(self.text, innerPos.x, innerPos.y, innerSize.x, "center")
+
+	Widget.draw(self)
 end
 
 return Label
