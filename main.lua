@@ -1,10 +1,19 @@
-Button = require 'lib.ui.button'
+local Button = require 'lib.ui.button'
+local Container = require 'lib.ui.container'
+local Label = require 'lib.ui.label'
 
 local Player = require "src.player"
 local Dungeon = require 'src.dungeon'
 
 local text
-local btn = Button.new()
+local root = Button.new()
+    :addChild(
+        Label.new("Hello World")
+    )
+
+-- Container.new()
+--     :addChild(
+--     )
 
 function love.load()
     love.graphics.setNewFont(12)
@@ -12,10 +21,7 @@ function love.load()
 
 
     text = "Nothing yet"
-
-    btn.text = "Test"
-    btn.onClick:register(function() print("click") end)
-    btn.y = 200
+    root:update()
 
     -- math.randomseed(os.time())
 
@@ -35,11 +41,10 @@ function love.draw()
     love.graphics.print(text, 0, 0)
 
     Dungeon:draw()
-    btn:draw()
+    root:draw()
 end
 
 function love.update(dt)
-    btn:update()
 end
 
 function love.keypressed(key)
@@ -47,9 +52,9 @@ function love.keypressed(key)
 end
 
 function love.mousepressed(...)
-    btn:mousepressed(...)
+    root:mousepressed(...)
 end
 
 function love.mousereleased(...)
-    btn:mousereleased(...)
+    root:mousereleased(...)
 end

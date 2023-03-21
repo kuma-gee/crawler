@@ -1,50 +1,52 @@
-local Widget = require 'lib.ui.widget'
-local Button = setmetatable({}, { __index = Widget })
+local Container = require 'lib.ui.container'
+local Button = setmetatable({}, { __index = Container })
 Button.__index = Button
 
 function Button.new()
-	return setmetatable({ isHover = false, isPressed = false, onClick = Signal(), text = "" }, Button)
+	local btn = setmetatable({ isHover = false, isPressed = false, onClick = Signal(), text = "" }, Button)
+	btn:setDirection(Container.Direction.ROW)
+	return btn
 end
 
 function Button:update()
-	self:_updateSize()
+	Container.update(self)
 	self:_updateHover()
 end
 
+function Button:_updateHover()
+	local mouse = self:getMousePosition()
+	local topLeft = self:getTopLeftCorner()
+	local botRight = self:getBottomRightCorner()
+
+	local insideX = mouse.x > topLeft.x and mouse.x < botRight.x
+	local insideY = mouse.y > topLeft.y and mouse.y < botRight.y
+	self.isHover = insideX and insideY
+end
+
 function Button:mousepressed(x, y, button)
+	Container.mousepressed(self)
+
 	if button == 1 and self.isHover then
 		self.isPressed = true
 	end
 end
 
 function Button:mousereleased(x, y, button)
+	Container.mousereleased(self)
+
 	if button == 1 and self.isPressed then
 		self.isPressed = false
 		self.onClick:emit()
 	end
 end
 
-function Button:_updateSize()
-	local font = love.graphics.getFont()
-	self.w = math.max(font:getWidth(self.text), self.w)
-	self.h = math.max(font:getHeight(), self.h)
-end
-
-function Button:_updateHover()
-	local mouseX = love.mouse.getX()
-	local mouseY = love.mouse.getY()
-
-	local insideX = mouseX > self.x and mouseX < self.x + self.w
-	local insideY = mouseY > self.y and mouseY < self.y + self.h
-
-	self.isHover = insideX and insideY
-end
-
 function Button:draw()
-	local font = love.graphics.getFont()
+	Container.draw(self)
 
-	love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
-	love.graphics.printf(self.text, self.x, self.y + (self.h / 2) - font:getHeight() / 2, self.w, "center")
+	local pos = self:getTopLeftCorner()
+	local size = self:getOuterSize()
+
+	love.graphics.rectangle("line", pos.x, pos.y, size.x, size.y)
 end
 
 return Button

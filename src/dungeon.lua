@@ -93,9 +93,10 @@ function Dungeon:_isInside(pos)
 end
 
 function Dungeon:draw()
+	self:activeRoom():draw()
+
 	for _, row in pairs(self.map) do
 		for _, col in pairs(row) do
-			col:draw()
 			local size = Vector(10, 10)
 			local offset = Vector(love.graphics.getWidth(), love.graphics.getHeight()) - self.size:permul(size + Vector(1, 1))
 			col:draw_map(self.pos, size, offset)
