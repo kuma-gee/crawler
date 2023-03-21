@@ -1,10 +1,10 @@
-Vector = require "lib.vector"
-Signal = require "lib.signal"
+Button = require 'lib.ui.button'
 
 local Player = require "src.player"
 local Dungeon = require 'src.dungeon'
 
 local text
+local btn = Button.new()
 
 function love.load()
     love.graphics.setNewFont(12)
@@ -13,9 +13,13 @@ function love.load()
 
     text = "Nothing yet"
 
+    btn.text = "Test"
+    btn.onClick:register(function() print("click") end)
+    btn.y = 200
+
     -- math.randomseed(os.time())
 
-    Player.move:register(function(dir)
+    Player.onMove:register(function(dir)
         Dungeon:move(dir)
 
         local room = Dungeon:activeRoom()
@@ -31,11 +35,21 @@ function love.draw()
     love.graphics.print(text, 0, 0)
 
     Dungeon:draw()
+    btn:draw()
 end
 
 function love.update(dt)
+    btn:update()
 end
 
 function love.keypressed(key)
     Player:keypressed(key)
+end
+
+function love.mousepressed(...)
+    btn:mousepressed(...)
+end
+
+function love.mousereleased(...)
+    btn:mousereleased(...)
 end

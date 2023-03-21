@@ -36,8 +36,9 @@ end
 function Room:draw()
 	local background = self:_getBackground()
 
-	local scaleX = love.graphics.getWidth() / background:getWidth()
-	local scaleY = love.graphics.getHeight() / background:getHeight()
+	local w, h = love.graphics.getDimensions()
+	local scaleX = w / background:getWidth()
+	local scaleY = h / background:getHeight()
 	love.graphics.draw(background, love.math.newTransform(0, 0, 0, scaleX, scaleY))
 end
 

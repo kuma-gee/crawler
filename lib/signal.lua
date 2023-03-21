@@ -1,7 +1,7 @@
 local Signal = {}
 Signal.__index = Signal
 
-function Signal.new()
+function Signal.new(_)
 	return setmetatable({ observer = {} }, Signal)
 end
 
@@ -23,4 +23,4 @@ function Signal:remove(...)
 	end
 end
 
-return Signal
+return setmetatable(Signal, { __call = function(_, ...) return Signal.new(...) end })
