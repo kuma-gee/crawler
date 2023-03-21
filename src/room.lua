@@ -2,7 +2,6 @@ local Room = {}
 Room.__index = Room
 
 local dir_to_letter = {
-	[Vector.DOWN] = 'S',
 	[Vector.LEFT] = 'W',
 	[Vector.RIGHT] = 'E',
 	[Vector.UP] = 'N',
@@ -12,10 +11,10 @@ local letter_to_image = {
 	['N'] = love.graphics.newImage('assets/Walls_N_0.png', {}),
 	['E'] = love.graphics.newImage('assets/Walls_E_0.png', {}),
 	['W'] = love.graphics.newImage('assets/Walls_W_0.png', {}),
-	['S'] = love.graphics.newImage('assets/Walls_S_0.png', {}),
+	[''] = love.graphics.newImage('assets/Walls_S_0.png', {}),
 	['NW'] = love.graphics.newImage('assets/Walls_NW_0.png', {}),
-	['NE'] = love.graphics.newImage('assets/Walls_NE_0.png', {}),
-	['NEW'] = love.graphics.newImage('assets/Walls_NEW_0.png', {}),
+	['EN'] = love.graphics.newImage('assets/Walls_NE_0.png', {}),
+	['ENW'] = love.graphics.newImage('assets/Walls_NEW_0.png', {}),
 	['EW'] = love.graphics.newImage('assets/Walls_EW_0.png', {}),
 }
 
@@ -43,20 +42,16 @@ function Room:draw()
 end
 
 function Room:_getBackground()
-	local letters = ''
+	local letters = {}
 
 	for k, v in pairs(dir_to_letter) do
 		if self:canMove(k) then
-			letters = letters .. v
+			table.insert(letters, v)
 		end
 	end
 
-	if string.len(letters) > 1 and string.find(letters, 'S') then
-		letters = string.gsub(letters, 'S', '')
-	end
-
-
-	return letter_to_image[letters]
+	table.sort(letters)
+	return letter_to_image[table.concat(letters)]
 end
 
 function Room:draw_map(active_pos, size, offset)
