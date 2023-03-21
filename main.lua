@@ -8,13 +8,17 @@ local Dungeon = require 'src.dungeon'
 
 local theme = Theme({ background = { 1, 0, 0, 1 }, padding = 10 })
 
+Logger.setLoggingLevel(Logger.Level.DEBUG)
+
 local root =
-Container.new()
+Container.new(Container.Dir.ROW)
     :addChild(
         Button.new()
-        :setTheme(theme)
-        :addChild(Label.new("Hello"))
-        :addChild(Label.new("World"))
+        :addChild(Label.new("Fight"))
+    )
+    :addChild(
+        Button.new()
+        :addChild(Label.new("Fight"))
     )
 
 

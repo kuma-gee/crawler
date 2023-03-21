@@ -95,10 +95,10 @@ function Widget:mousereleased(...) end
 
 function Widget:draw()
 	self:drawInColor(self.debugColor, function()
-		love.graphics.circle('fill', self._pos.x, self._pos.y, 5)
+		love.graphics.circle('fill', self._pos.x, self._pos.y, 2)
 
 		local botRight = self:getBottomRightCorner()
-		love.graphics.circle('fill', botRight.x, botRight.y, 5)
+		love.graphics.circle('fill', botRight.x, botRight.y, 2)
 	end)
 end
 

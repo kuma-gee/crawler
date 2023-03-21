@@ -5,8 +5,8 @@ Container.__index = Container
 local Direction = { ROW = 'row', COL = 'col' }
 local Align = {}
 
-function Container.new()
-	return setmetatable({ _dir = Direction.COL, _children = {} }, Container)
+function Container.new(dir)
+	return setmetatable({ _dir = dir or Direction.COL, _children = {}, _logger = Logger.new('Container') }, Container)
 end
 
 function Container:addChild(child)
@@ -37,6 +37,8 @@ function Container:update()
 			size.y = size.y + childSize.y
 			currPos.y = currPos.y + childSize.y
 		end
+
+		self._logger:info(currPos)
 	end
 
 	self:setInnerSize(size)
@@ -46,6 +48,8 @@ function Container:draw()
 	for _, child in ipairs(self._children) do
 		child:draw()
 	end
+
+	Widget.draw(self)
 end
 
 function Container:mousepressed(...)
@@ -64,4 +68,4 @@ function Container:setTheme(theme)
 	return Widget.setTheme(self, theme)
 end
 
-return setmetatable({ Direction = Direction }, Container)
+return setmetatable({ Dir = Direction }, Container)

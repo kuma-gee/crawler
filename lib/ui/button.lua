@@ -3,8 +3,8 @@ local Button = setmetatable({}, { __index = Container.new() })
 Button.__index = Button
 
 function Button.new()
-	local btn = setmetatable({ isHover = false, isPressed = false, onClick = Signal(), _bgColor = { 0, 0, 0, 0 } }, Button)
-	btn:setDirection(Container.Direction.ROW)
+	local btn = setmetatable({ isHover = false, isPressed = false, onClick = Signal(), _bgColor = { 0, 0, 0, 0 }, _logger = Logger.new('Button') }, Button)
+	btn:setDirection(Container.Dir.ROW)
 	return btn
 end
 
