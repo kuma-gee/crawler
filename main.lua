@@ -6,26 +6,21 @@ local Theme = require 'lib.ui.theme'
 local Player = require "src.player"
 local Dungeon = require 'src.dungeon'
 
-local theme = Theme({ background = { 1, 0, 0, 1 }, padding = 1 })
-
 Logger.setLoggingLevel(Logger.Level.DEBUG)
 
-local root = Container.new():setTheme(theme):addChild(Label.new("Test"))
-    :addChild(Label.new("Test"))
+local theme1 = { background = { 1, 0, 0, 1 }, padding = 1 }
 
--- Container.new(nil)
--- :addChild(Button.new():addChild(Label.new("Test")))
--- :addChild(Label.new("Fight"))
--- :addChild(Label.new("Now"))
-
--- Container.new(Container.Dir.ROW)
---     :addChild(
---     )
--- :addChild(
---     Button.new()
---     :addChild(Label.new("Fight"))
--- )
-
+local root =
+    Container(Vector.DOWN):setTheme(Theme({ background = { 1, 0, 0, 1 }, padding = 1 }))
+    :addChild(Button()
+        :setTheme({ background = { 0, 0, 1, 0.5 }, padding = 1 })
+        :addChild(Label("First")))
+    :addChild(
+        Button()
+        :setTheme({ background = { 0, 1, 0, 0.5 }, padding = 1 })
+        :addChild(Label("Second"))
+        :addChild(Label("Second.2"))
+    )
 
 function love.load()
     love.graphics.setNewFont(12)
@@ -53,7 +48,7 @@ function love.draw()
     -- love.graphics.print(text, 0, 0)
 
     Dungeon:draw()
-    root:draw()
+    -- root:draw()
 end
 
 function love.update(dt)

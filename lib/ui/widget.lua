@@ -1,10 +1,9 @@
-local Widget = {}
-Widget.__index = Widget
-
-function Widget.new()
-	return setmetatable(
-		{ _pos = Vector(0, 0), _size = Vector(0, 0), _pad = { 0, 0, 0, 0 }, debugColor = { 1, 0, 0, 1 } }, Widget)
-end
+local Widget = Class:extend({
+	_pos = Vector(0, 0),
+	_size = Vector(0, 0),
+	_pad = { 0, 0, 0, 0 },
+	debugColor = { 1, 0, 0, 1 }
+})
 
 function Widget:_fontSize()
 	local font = love.graphics.getFont()
@@ -35,7 +34,7 @@ function Widget:getOuterSize()
 end
 
 function Widget:getInnerSize()
-	return self._size
+	return self._size:clone()
 end
 
 function Widget:setInnerSize(size)
@@ -47,7 +46,7 @@ function Widget:setTopLeftCorner(pos)
 end
 
 function Widget:getTopLeftCorner()
-	return self._pos
+	return self._pos:clone()
 end
 
 function Widget:getBottomRightCorner()

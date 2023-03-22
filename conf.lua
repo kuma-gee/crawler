@@ -1,6 +1,7 @@
 Vector = require 'lib.vector'
 Signal = require 'lib.signal'
 Logger = require 'lib.logger'
+Class = require 'lib.class'
 
 function love.conf(t)
 	-- t.identity = nil                    -- The name of the save directory (string)
@@ -15,7 +16,7 @@ function love.conf(t)
 	-- t.audio.mixwithsystem = true        -- Keep background music playing when opening LOVE (boolean, iOS and Android only)
 
 	t.window.title = "Crawler" -- The window title (string)
-	t.window.icon = nil -- Filepath to an image to use as the window's icon (string)
+	t.window.icon = nil     -- Filepath to an image to use as the window's icon (string)
 	t.window.width = 1920 / 2 -- The window width (number)
 	t.window.height = 1080 / 2 -- The window height (number)
 	-- t.window.borderless = false         -- Remove all border visuals from the window (boolean)

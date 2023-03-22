@@ -1,9 +1,8 @@
 local Widget = require 'lib.ui.widget'
-local Label = setmetatable({}, { __index = Widget.new() })
-Label.__index = Label
+local Label = Widget:extend({ text = "", _textColor = { 0, 0, 0, 1 } })
 
-function Label.new(t)
-	return setmetatable({ text = t, _textColor = { 0, 0, 0, 1 } }, Label)
+function Label:constructor(t)
+	self.text = t
 end
 
 function Label:update()

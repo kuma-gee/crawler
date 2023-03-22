@@ -1,17 +1,14 @@
 local Container = require 'lib.ui.container'
-local Button = setmetatable({}, { __index = Container.new(Vector.RIGHT) })
-Button.__index = Button
+local Button = Container:extend({
+	isHover = false,
+	isPressed = false,
+	onClick = Signal(),
+	debugColor = { 0, 1, 0, 1 },
+	_logger = Logger.new('Button')
+})
 
-function Button.new()
-	return setmetatable(
-		{
-			isHover = false,
-			isPressed = false,
-			onClick = Signal(),
-			debugColor = { 0, 1, 0, 1 },
-			_logger = Logger.new('Button')
-		},
-		Button)
+function Button:constructor()
+	self._dir = Vector.RIGHT
 end
 
 function Button:update()

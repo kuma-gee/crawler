@@ -1,14 +1,13 @@
 local Widget = require 'lib.ui.widget'
-local Container = setmetatable({}, { __index = Widget.new() })
-Container.__index = Container
+local Container = Widget:extend({
+	_dir = Vector.DOWN,
+	_children = {},
+	_logger = Logger.new('Container'),
+	_bgColor = { 0, 0, 0, 0 },
+})
 
-function Container.new(dir)
-	return setmetatable({
-		_dir = dir or Vector.DOWN,
-		_children = {},
-		_logger = Logger.new('Container'),
-		_bgColor = { 0, 0, 0, 0 },
-	}, Container)
+function Container:constructor(dir)
+	self._dir = dir
 end
 
 function Container:addChild(child)
@@ -22,7 +21,9 @@ end
 
 function Container:update()
 	local size = Vector(0, 0)
-	local currPos = self:getInnerTopLeftCorner():clone()
+	local currPos = self:getInnerTopLeftCorner()
+
+	print(self._children)
 
 	for _, child in ipairs(self._children) do
 		child:setTopLeftCorner(currPos:clone())
@@ -36,8 +37,6 @@ function Container:update()
 		else
 			size.x = math.max(size.x, childSize.x)
 		end
-
-		self._logger:info(tostring(self._dir) .. ", " .. tostring(self._dir:perpendicular():abs()))
 	end
 
 	self:setInnerSize(size)
@@ -54,8 +53,6 @@ function Container:draw()
 	for _, child in ipairs(self._children) do
 		child:draw()
 	end
-
-	Widget.draw(self)
 end
 
 function Container:mousepressed(...)
@@ -77,4 +74,4 @@ function Container:setTheme(theme)
 	return Widget.setTheme(self, theme)
 end
 
-return setmetatable({}, Container)
+return Container
