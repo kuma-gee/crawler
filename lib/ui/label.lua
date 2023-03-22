@@ -27,6 +27,8 @@ function Label:draw()
 	self:drawInColor(self._textColor, function()
 		love.graphics.printf(self.text, innerPos.x, innerPos.y, innerSize.x, "center")
 	end)
+
+	-- Widget.draw(self)
 end
 
 function Label:setTheme(theme)

@@ -125,6 +125,10 @@ function vector.__le(a, b)
 	return a.x <= b.x and a.y <= b.y
 end
 
+function vector:abs()
+	return new(math.abs(self.x), math.abs(self.y))
+end
+
 function vector:permul(b)
 	assert(isvector(b), "permul: wrong argument types (<vector> expected)")
 	return new(self.x * b.x, self.y * b.y)

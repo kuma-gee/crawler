@@ -1,11 +1,17 @@
 local Container = require 'lib.ui.container'
-local Button = setmetatable({}, { __index = Container.new() })
+local Button = setmetatable({}, { __index = Container.new(Vector.RIGHT) })
 Button.__index = Button
 
 function Button.new()
-	local btn = setmetatable({ isHover = false, isPressed = false, onClick = Signal(), _bgColor = { 0, 0, 0, 0 }, _logger = Logger.new('Button') }, Button)
-	btn:setDirection(Container.Dir.ROW)
-	return btn
+	return setmetatable(
+		{
+			isHover = false,
+			isPressed = false,
+			onClick = Signal(),
+			debugColor = { 0, 1, 0, 1 },
+			_logger = Logger.new('Button')
+		},
+		Button)
 end
 
 function Button:update()
@@ -38,26 +44,6 @@ function Button:mousereleased(x, y, button)
 		self.isPressed = false
 		self.onClick:emit()
 	end
-end
-
-function Button:draw()
-	local pos = self:getTopLeftCorner()
-	local size = self:getOuterSize()
-
-	self:drawInColor(self._bgColor, function()
-		love.graphics.rectangle("fill", pos.x, pos.y, size.x, size.y)
-	end)
-
-	Container.draw(self)
-end
-
-function Button:setTheme(theme)
-	print(theme)
-	if theme.background then
-		self._bgColor = theme.background
-	end
-
-	return Container.setTheme(self, theme)
 end
 
 return Button
