@@ -3,8 +3,13 @@ local Label = Widget:extend()
 
 function Label:new(t)
 	Label.super.new(self)
-	self.text = t
+	self._text = t
 	self._textColor = { 0, 0, 0, 1 }
+end
+
+function Label:setText(t)
+	self._text = tostring(t)
+	self:setInnerSize(Vector.ZERO) -- allow size to shrink
 end
 
 function Label:update()
@@ -16,28 +21,30 @@ function Label:_updateSizeForText()
 	local size = self:getInnerSize()
 
 	self:setInnerSize(Vector(
-		math.max(font:getWidth(self.text), size.x),
+		math.max(font:getWidth(self._text), size.x),
 		math.max(font:getHeight(), size.y)
 	))
 end
 
 function Label:draw()
+	Label.super.draw(self)
+
 	local innerPos = self:getInnerTopLeftCorner()
 	local innerSize = self:getInnerSize()
 
 	self:drawInColor(self._textColor, function()
-		love.graphics.printf(self.text, innerPos.x, innerPos.y, innerSize.x, "center")
+		love.graphics.printf(self._text, innerPos.x, innerPos.y, innerSize.x, "left")
 	end)
-
-	-- Widget.draw(self)
 end
 
-function Label:setTheme(theme)
-	Widget.setTheme(self, theme)
+function Label:withTheme(theme)
+	Label.super.withTheme(self, theme)
 
 	if theme.color then
 		self._textColor = theme.color
 	end
+
+	return self
 end
 
 return Label

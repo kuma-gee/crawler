@@ -44,13 +44,6 @@ function Container:update()
 end
 
 function Container:draw()
-	local pos = self:getTopLeftCorner()
-	local size = self:getOuterSize()
-
-	self:drawInColor(self._bgColor, function()
-		love.graphics.rectangle("fill", pos.x, pos.y, size.x, size.y)
-	end)
-
 	for _, child in ipairs(self._children) do
 		child:draw()
 	end
@@ -66,13 +59,6 @@ function Container:mousereleased(...)
 	for _, child in ipairs(self._children) do
 		child:mousereleased(...)
 	end
-end
-
-function Container:setTheme(theme)
-	if theme.background then
-		self._bgColor = theme.background
-	end
-	return Widget.setTheme(self, theme)
 end
 
 return Container

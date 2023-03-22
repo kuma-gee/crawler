@@ -4,7 +4,7 @@ function Widget:new()
 	self._pos = Vector(0, 0)
 	self._size = Vector(0, 0)
 	self._pad = { 0, 0, 0, 0 }
-	self.debugColor = { 1, 0, 0, 1 }
+	self._bgColor = { 0, 0, 0, 0 }
 end
 
 function Widget:_fontSize()
@@ -73,8 +73,11 @@ end
 
 -- Theme related
 
-function Widget:setTheme(theme)
+function Widget:withTheme(theme)
 	self:setPadding(theme.padding)
+	if theme.background then
+		self._bgColor = theme.background
+	end
 	return self
 end
 
@@ -103,11 +106,11 @@ function Widget:mousereleased(...)
 end
 
 function Widget:draw()
-	self:drawInColor(self.debugColor, function()
-		love.graphics.circle('fill', self._pos.x, self._pos.y, 2)
+	local pos = self:getTopLeftCorner()
+	local size = self:getOuterSize()
 
-		local botRight = self:getBottomRightCorner()
-		love.graphics.circle('fill', botRight.x, botRight.y, 2)
+	self:drawInColor(self._bgColor, function()
+		love.graphics.rectangle("fill", pos.x, pos.y, size.x, size.y)
 	end)
 end
 
