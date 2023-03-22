@@ -1,10 +1,13 @@
 local Widget = require 'lib.ui.widget'
-local Container = Widget:extend({
-	_dir = Vector.DOWN,
-	_children = {},
-	_logger = Logger.new('Container'),
-	_bgColor = { 0, 0, 0, 0 },
-})
+local Container = Widget:extend()
+
+function Container:new()
+	Container.super.new(self)
+	self._dir = Vector.DOWN
+	self._children = {}
+	self._logger = Logger.new('Container')
+	self._bgColor = { 0, 0, 0, 0 }
+end
 
 function Container:constructor(dir)
 	self._dir = dir
@@ -22,8 +25,6 @@ end
 function Container:update()
 	local size = Vector(0, 0)
 	local currPos = self:getInnerTopLeftCorner()
-
-	print(self._children)
 
 	for _, child in ipairs(self._children) do
 		child:setTopLeftCorner(currPos:clone())

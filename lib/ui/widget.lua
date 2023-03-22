@@ -1,9 +1,11 @@
-local Widget = Class:extend({
-	_pos = Vector(0, 0),
-	_size = Vector(0, 0),
-	_pad = { 0, 0, 0, 0 },
-	debugColor = { 1, 0, 0, 1 }
-})
+local Widget = Class:extend()
+
+function Widget:new()
+	self._pos = Vector(0, 0)
+	self._size = Vector(0, 0)
+	self._pad = { 0, 0, 0, 0 }
+	self.debugColor = { 1, 0, 0, 1 }
+end
 
 function Widget:_fontSize()
 	local font = love.graphics.getFont()

@@ -1,8 +1,10 @@
 local Widget = require 'lib.ui.widget'
-local Label = Widget:extend({ text = "", _textColor = { 0, 0, 0, 1 } })
+local Label = Widget:extend()
 
-function Label:constructor(t)
+function Label:new(t)
+	Label.super.new(self)
 	self.text = t
+	self._textColor = { 0, 0, 0, 1 }
 end
 
 function Label:update()

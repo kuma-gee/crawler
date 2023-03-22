@@ -1,14 +1,14 @@
 local Container = require 'lib.ui.container'
-local Button = Container:extend({
-	isHover = false,
-	isPressed = false,
-	onClick = Signal(),
-	debugColor = { 0, 1, 0, 1 },
-	_logger = Logger.new('Button')
-})
+local Button = Container:extend()
 
-function Button:constructor()
+function Button:new()
+	Button.super.new(self)
 	self._dir = Vector.RIGHT
+	self.isHover = false
+	self.isPressed = false
+	self.onClick = Signal()
+	self.debugColor = { 0, 1, 0, 1 }
+	self._logger = Logger.new('Button')
 end
 
 function Button:update()

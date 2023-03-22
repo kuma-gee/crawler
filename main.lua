@@ -27,7 +27,6 @@ function love.load()
     love.graphics.setBackgroundColor(0.14, 0.10, 0.08)
 
 
-    -- text = "Nothing yet"
     root:update()
 
     -- math.randomseed(os.time())
@@ -48,7 +47,7 @@ function love.draw()
     -- love.graphics.print(text, 0, 0)
 
     Dungeon:draw()
-    -- root:draw()
+    root:draw()
 end
 
 function love.update(dt)
