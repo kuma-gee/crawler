@@ -2,23 +2,29 @@ local Widget = {}
 Widget.__index = Widget
 
 function Widget.new()
-	return setmetatable({ _pos = Vector(0, 0), _size = Vector(0, 0), _pad = { 0, 0, 0, 0 }, debugColor = { 1, 0, 0, 1 } }, Widget)
+	return setmetatable(
+		{ _pos = Vector(0, 0), _size = Vector(0, 0), _pad = { 0, 0, 0, 0 }, debugColor = { 1, 0, 0, 1 } }, Widget)
+end
+
+function Widget:_fontSize()
+	local font = love.graphics.getFont()
+	return font:getHeight()
 end
 
 function Widget:_getTopPadding()
-	return self._pad[1]
+	return self._pad[1] * self:_fontSize()
 end
 
 function Widget:_getRightPadding()
-	return self._pad[2]
+	return self._pad[2] * self:_fontSize()
 end
 
 function Widget:_getBottomPadding()
-	return self._pad[3]
+	return self._pad[3] * self:_fontSize()
 end
 
 function Widget:_getLeftPadding()
-	return self._pad[4]
+	return self._pad[4] * self:_fontSize()
 end
 
 function Widget:getOuterSize()
@@ -89,9 +95,11 @@ end
 
 -- Override in sub classes if needed
 
-function Widget:mousepressed(...) end
+function Widget:mousepressed(...)
+end
 
-function Widget:mousereleased(...) end
+function Widget:mousereleased(...)
+end
 
 function Widget:draw()
 	self:drawInColor(self.debugColor, function()
@@ -102,6 +110,7 @@ function Widget:draw()
 	end)
 end
 
-function Widget:update() end
+function Widget:update()
+end
 
 return Widget

@@ -6,7 +6,7 @@ local Theme = require 'lib.ui.theme'
 local Player = require "src.player"
 local Dungeon = require 'src.dungeon'
 
-local theme = Theme({ background = { 1, 0, 0, 1 }, padding = 10 })
+local theme = Theme({ background = { 1, 0, 0, 1 }, padding = 1 })
 
 Logger.setLoggingLevel(Logger.Level.DEBUG)
 
