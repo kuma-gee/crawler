@@ -1,5 +1,5 @@
-local Widget = require 'lib.ui.widget'
-local Label = Widget:extend()
+local Control = require 'lib.node.control'
+local Label = Control:extend()
 
 function Label:new(t)
 	Label.super.new(self)
@@ -9,42 +9,41 @@ end
 
 function Label:setText(t)
 	self._text = tostring(t)
-	self:setInnerSize(Vector.ZERO) -- allow size to shrink
+	self:setSize(Vector.ZERO) -- allow size to shrink
 end
 
-function Label:update()
+function Label:update(_)
+	Label.super.update(self, _)
 	self:_updateSizeForText()
 end
 
 function Label:_updateSizeForText()
 	local font = love.graphics.getFont()
-	local size = self:getInnerSize()
+	local size = self:getSize()
 
-	self:setInnerSize(Vector(
+	self:setSize(Vector(
 		math.max(font:getWidth(self._text), size.x),
 		math.max(font:getHeight(), size.y)
 	))
 end
 
 function Label:draw()
-	Label.super.draw(self)
-
-	local innerPos = self:getInnerTopLeftCorner()
-	local innerSize = self:getInnerSize()
+	local pos = self:getPosition()
+	local size = self:getSize()
 
 	self:drawInColor(self._textColor, function()
-		love.graphics.printf(self._text, innerPos.x, innerPos.y, innerSize.x, "left")
+		love.graphics.printf(self._text, pos.x, pos.y, size.x, "left")
 	end)
+
+	Label.super.draw(self)
 end
 
-function Label:withTheme(theme)
-	Label.super.withTheme(self, theme)
-
+function Label:setTheme(theme)
 	if theme.color then
 		self._textColor = theme.color
 	end
 
-	return self
+	return Label.super.setTheme(self, theme)
 end
 
 return Label

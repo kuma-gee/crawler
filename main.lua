@@ -1,30 +1,24 @@
-local Button = require 'lib.ui.button'
-local Container = require 'lib.ui.container'
-local Label = require 'lib.ui.label'
-local Theme = require 'lib.ui.theme'
+local Button = require 'lib.node.control.button'
+local Container = require 'lib.node.control.container'
+local Label = require 'lib.node.control.label'
+local Theme = require 'lib.node.control.theme'
 
 local Player = require "src.player"
 local Dungeon = require 'src.dungeon'
 
 Logger.setLoggingLevel(Logger.Level.DEBUG)
 
-local positionText = Label(""):withTheme(Theme({ background = { 1, 0, 0, 1 } }))
-local movableText = Label(""):withTheme(Theme({ background = { 0, 1, 0, 1 } }))
-
-local root = Container(Vector.DOWN)
-    :addChild(positionText)
-    :addChild(movableText)
-
--- Container(Vector.DOWN):setTheme(Theme({ background = { 1, 0, 0, 1 }, padding = 1 }))
---     :addChild(Button()
---         :setTheme({ background = { 0, 0, 1, 0.5 }, padding = 1 })
---         :addChild(Label("First")))
---     :addChild(
---         Button()
---         :setTheme({ background = { 0, 1, 0, 0.5 }, padding = 1 })
---         :addChild(Label("Second"))
---         :addChild(Label("Second.2"))
---     )
+local root =
+    Container(Vector.DOWN):setTheme(Theme({ background = { 1, 0, 0, 1 }, padding = 5 }))
+    :addChild(Button()
+        :setTheme({ background = { 0, 0, 1, 0.5 }, padding = 5 })
+        :addChild(Label("First")))
+    :addChild(
+        Button()
+        :setTheme({ background = { 0, 1, 0, 0.5 }, padding = 5 })
+        :addChild(Label("Second"))
+        :addChild(Label("Second.2"))
+    )
 
 function love.load()
     love.graphics.setNewFont(12)
@@ -37,14 +31,14 @@ function love.load()
     Player.onMove:register(function(dir)
         Dungeon:move(dir)
 
-        local room = Dungeon:activeRoom()
-        positionText:setText(room.pos)
+        -- local room = Dungeon:activeRoom()
+        -- positionText:setText(room.pos)
 
-        local move = ""
-        for _, d in ipairs(room.doors) do
-            move = move .. tostring(d) .. ", "
-        end
-        movableText:setText(move)
+        -- local move = ""
+        -- for _, d in ipairs(room.doors) do
+        --     move = move .. tostring(d) .. ", "
+        -- end
+        -- movableText:setText(move)
     end)
 end
 

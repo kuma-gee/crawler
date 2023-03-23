@@ -108,6 +108,7 @@ end
 local function strict_eq(t1, t2)
 	if type(t1) ~= type(t2) then return false end
 	if type(t1) ~= 'table' then return t1 == t2 end
+
 	for k, _ in pairs(t1) do
 		if not strict_eq(t1[k], t2[k]) then return false end
 	end
@@ -115,6 +116,14 @@ local function strict_eq(t1, t2)
 		if not strict_eq(t2[k], t1[k]) then return false end
 	end
 	return true
+end
+
+local function any_to_string(v)
+	if type(v) ~= 'table' or Vector.isvector(v) then
+		return tostring(v)
+	end
+
+	return '{' .. table.concat(v, ', ') .. '}'
 end
 
 local paths = {
@@ -150,8 +159,8 @@ local paths = {
 	equal = {
 		test = function(v, x)
 			return strict_eq(v, x),
-				'expected ' .. tostring(v) .. ' and ' .. tostring(x) .. ' to be exactly equal',
-				'expected ' .. tostring(v) .. ' and ' .. tostring(x) .. ' to not be exactly equal'
+				'expected ' .. any_to_string(v) .. ' and ' .. any_to_string(x) .. ' to be exactly equal',
+				'expected ' .. any_to_string(v) .. ' and ' .. any_to_string(x) .. ' to not be exactly equal'
 		end
 	},
 	have = {
