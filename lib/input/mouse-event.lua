@@ -1,17 +1,14 @@
-local MouseEvent = Class:extend()
+local InputEvent = require 'lib.input.input-event'
+local MouseEvent = InputEvent:extend()
 
 function MouseEvent:new(pos, button, pressed)
+	MouseEvent.super.new(self, pressed)
 	self._pos = pos
 	self._button = button
-	self._pressed = pressed
 end
 
 function MouseEvent:getPosition()
 	return self._pos
-end
-
-function MouseEvent:isPressed()
-	return self._pressed
 end
 
 function MouseEvent:isLeftButton()
