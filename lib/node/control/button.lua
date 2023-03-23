@@ -36,7 +36,7 @@ function Button:_updateHover()
 end
 
 function Button:input(event)
-	if event:is(MouseEvent) and event:isLeftButton() then
+	if self._isHover and event:is(MouseEvent) and event:isLeftButton() then
 		self._isPressed = event:isPressed()
 		if self._isPressed then
 			self.onClick:emit()

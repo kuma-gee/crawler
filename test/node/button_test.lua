@@ -40,12 +40,21 @@ describe('Button', function()
 		mouseY = 1
 		btn:update()
 
-		btn:input(MouseEvent(1, true))
+		btn:input(MouseEvent(Vector.ZERO, 1, true))
 		expect(btn:isPressed()).to.equal(true)
 
 		expect(#click).to.equal(1)
 
-		btn:input(MouseEvent(1, false))
+		btn:input(MouseEvent(Vector.ZERO, 1, false))
+		expect(btn:isPressed()).to.equal(false)
+	end)
+
+	it('not set pressed if not hovering', function()
+		btn:addChild(Control():setSize(Vector(10, 2)))
+		btn:setPosition(Vector(1, 1))
+		btn:update()
+
+		btn:input(MouseEvent(Vector.ZERO, 1, true))
 		expect(btn:isPressed()).to.equal(false)
 	end)
 end)

@@ -8,6 +8,7 @@ end
 
 function Node2D:setPosition(pos)
 	self._pos = pos
+	return self
 end
 
 function Node2D:getPosition()
