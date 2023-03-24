@@ -9,8 +9,9 @@ function Control:new(anchor)
 end
 
 function Control:getTopLeftCorner()
-	local center = self:getPosition() - (self._anchor:permul(self._size / 2))
-	return center - (self._size / 2)
+	local size = self:getSize()
+	local center = self:getPosition() - (self._anchor:permul(size / 2))
+	return center - (size / 2)
 end
 
 function Control:getSize()

@@ -51,10 +51,8 @@ describe('Container', function()
 			end)
 	end
 
-
-
 	it('align with padding', function()
-		local container = Container(Vector.DOWN):setPadding(1)
+		local container = Container(Vector.DOWN, Vector.ZERO):setPadding(1)
 		container:addChild(
 			Control():setSize(Vector(5, 2)),
 			Control():setSize(Vector(2, 2))
@@ -62,6 +60,7 @@ describe('Container', function()
 		container:update()
 
 		expect(container:getSize()).to.equal(Vector(7, 6))
+		expect(container:getTopLeftCorner()).to.equal(Vector(-3.5, -3))
 	end)
 
 	it('set padding', function()
