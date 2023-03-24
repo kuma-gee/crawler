@@ -22,4 +22,4 @@ function Player:input(ev)
 	end
 end
 
-return Player()
+return Player

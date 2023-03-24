@@ -26,4 +26,4 @@ function MainContainer:input(ev)
 	MainContainer.super.input(self, ev)
 end
 
-return MainContainer()
+return MainContainer

@@ -1,20 +1,10 @@
-local Node = require 'lib.node'
-
 local Input = require 'lib.input'
-
-local Player = require "src.player"
-local Dungeon = require 'src.dungeon'
-local MainContainer = require 'src.main-container'
-local Map = require 'src.map'
+local Game = require 'src.game'
 
 Logger.setLoggingLevel(Logger.Level.DEBUG)
 
 
-local root = Node():addChild(
-    Dungeon,
-    Player,
-    MainContainer:addChild(Map(Dungeon))
-)
+local root = Game()
 
 function love.load()
     love.graphics.setNewFont(12)
@@ -24,19 +14,6 @@ function love.load()
 
     Input.onInput:register(function(ev) root:input(ev) end)
     Input:load()
-
-    Player.onMove:register(function(dir)
-        Dungeon:move(dir)
-
-        -- local room = Dungeon:activeRoom()
-        -- positionText:setText(room.pos)
-
-        -- local move = ""
-        -- for _, d in ipairs(room.doors) do
-        --     move = move .. tostring(d) .. ", "
-        -- end
-        -- movableText:setText(move)
-    end)
 
     root:load()
 end

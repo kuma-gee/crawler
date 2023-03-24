@@ -8,7 +8,7 @@ local function _randomStart(x, y)
 	return Vector(math.random(1, x), math.random(1, y))
 end
 
-function Dungeon:new(w, h)
+local function _setupMap(w, h)
 	local map = {}
 	for x = 1, w do
 		map[x] = {}
@@ -17,10 +17,15 @@ function Dungeon:new(w, h)
 			map[x][y] = nil
 		end
 	end
+	return map
+end
 
-	self.map = map
+function Dungeon:new(w, h, player)
+	self.map = _setupMap(w, h)
 	self.pos = _randomStart(w, h)
 	self.size = Vector(w, h)
+
+	player.onMove:register(function(dir) self:move(dir) end)
 	self:move(Vector.ZERO)
 end
 
@@ -103,4 +108,4 @@ function Dungeon:getMap()
 	return self.map
 end
 
-return Dungeon(10, 10)
+return Dungeon
