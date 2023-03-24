@@ -5,6 +5,8 @@ local Player = Node2D:extend()
 function Player:new()
 	Player.super.new(self)
 	self.onMove = Signal()
+
+	self._health = 5
 end
 
 function Player:input(ev)

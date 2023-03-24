@@ -21,6 +21,8 @@ local function _setupMap(w, h)
 end
 
 function Dungeon:new(w, h, player)
+	self.onNewRoom = Signal()
+
 	self.map = _setupMap(w, h)
 	self.pos = _randomStart(w, h)
 	self.size = Vector(w, h)
@@ -44,6 +46,7 @@ function Dungeon:move(dir)
 			local new_room = self:activeRoom()
 			if new_room == nil then
 				self:_generateRoom(-dir)
+				self.onNewRoom:emit()
 			end
 		end
 	end
@@ -106,6 +109,21 @@ end
 
 function Dungeon:getMap()
 	return self.map
+end
+
+function Dungeon:getDiscoveredPercentage()
+	local discovered = 0
+	local total = self.size:area()
+
+	for _, row in ipairs(self.map) do
+		for _, room in ipairs(row) do
+			if room ~= nil then
+				discovered = discovered + 1
+			end
+		end
+	end
+
+	return discovered / total
 end
 
 return Dungeon

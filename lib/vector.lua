@@ -173,6 +173,10 @@ function vector:len()
 	return sqrt(self.x * self.x + self.y * self.y)
 end
 
+function vector:area()
+	return self.x * self.y
+end
+
 function vector.dist(a, b)
 	assert(isvector(a) and isvector(b), "dist: wrong argument types (<vector> expected)")
 	local dx = a.x - b.x

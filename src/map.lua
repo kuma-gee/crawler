@@ -4,7 +4,7 @@ local Map = Control:extend()
 function Map:new(dungeon)
 	Map.super.new(self)
 	self._dungeon = dungeon
-	self:setSize(Vector(100, 100))
+	self:setSize(Vector(300, 300))
 end
 
 function Map:toWorld(v, size)
