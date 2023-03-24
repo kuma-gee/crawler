@@ -5,6 +5,7 @@ local Input = require 'lib.input'
 local Player = require "src.player"
 local Dungeon = require 'src.dungeon'
 local MainContainer = require 'src.main-container'
+local Map = require 'src.map'
 
 Logger.setLoggingLevel(Logger.Level.DEBUG)
 
@@ -12,7 +13,7 @@ Logger.setLoggingLevel(Logger.Level.DEBUG)
 local root = Node():addChild(
     Dungeon,
     Player,
-    MainContainer
+    MainContainer:addChild(Map(Dungeon))
 )
 
 function love.load()
@@ -22,6 +23,7 @@ function love.load()
     -- math.randomseed(os.time())
 
     Input.onInput:register(function(ev) root:input(ev) end)
+    Input:load()
 
     Player.onMove:register(function(dir)
         Dungeon:move(dir)
@@ -35,6 +37,8 @@ function love.load()
         -- end
         -- movableText:setText(move)
     end)
+
+    root:load()
 end
 
 function love.draw()
@@ -61,4 +65,8 @@ end
 
 function love.mousereleased(...)
     Input:mousereleased(...)
+end
+
+function love.resize(w, h)
+    Input:resize(w, h)
 end

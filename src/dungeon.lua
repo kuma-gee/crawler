@@ -24,6 +24,10 @@ function Dungeon:new(w, h)
 	self:move(Vector.ZERO)
 end
 
+function Dungeon:getSize()
+	return self.size
+end
+
 function Dungeon:move(dir)
 	local curr_room = self:activeRoom()
 
@@ -93,15 +97,10 @@ end
 
 function Dungeon:draw()
 	self:activeRoom():draw()
+end
 
-	for _, row in pairs(self.map) do
-		for _, col in pairs(row) do
-			local size = Vector(10, 10)
-			local offset = Vector(love.graphics.getWidth(), love.graphics.getHeight()) -
-				self.size:permul(size + Vector(1, 1))
-			col:draw_map(self.pos, size, offset)
-		end
-	end
+function Dungeon:getMap()
+	return self.map
 end
 
 return Dungeon(10, 10)

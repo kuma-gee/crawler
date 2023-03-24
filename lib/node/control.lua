@@ -11,7 +11,7 @@ end
 
 function Control:getTopLeftCorner()
 	local size = self:getSize()
-	local center = self:getPosition() - (self._anchor:permul(size / 2))
+	local center = self:getPosition() - (self._anchor:multiply(size / 2))
 	return center - (size / 2)
 end
 

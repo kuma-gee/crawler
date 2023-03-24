@@ -64,7 +64,7 @@ function Container:update(_)
 	local currPos = self:_getInnerTopLeftCorner()
 	self:eachChild(function(child)
 		child:setPosition(currPos:clone())
-		currPos = currPos + child:getSize():permul(self._dir)
+		currPos = currPos + child:getSize():multiply(self._dir)
 	end)
 end
 
@@ -74,7 +74,7 @@ function Container:_updateSize()
 		child:update()
 
 		local childSize = child:getSize()
-		childrenSize = childrenSize + childSize:permul(self._dir:abs())
+		childrenSize = childrenSize + childSize:multiply(self._dir:abs())
 
 		if self._dir * Vector.UP == 0 then
 			childrenSize.y = math.max(childrenSize.y, childSize.y)
