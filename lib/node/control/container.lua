@@ -31,9 +31,10 @@ function Container:setSize(size)
 end
 
 function Container:getSize()
+	local size = Container.super.getSize(self)
 	return Vector(
-		self._size.x + self:_getLeftPadding() + self:_getRightPadding(),
-		self._size.y + self:_getTopPadding() + self:_getBottomPadding()
+		size.x + self:_getLeftPadding() + self:_getRightPadding(),
+		size.y + self:_getTopPadding() + self:_getBottomPadding()
 	);
 end
 

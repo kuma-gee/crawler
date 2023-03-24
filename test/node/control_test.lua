@@ -23,4 +23,18 @@ describe('Control', function()
 			expect(node:getTopLeftCorner()).to.equal(args[2])
 		end)
 	end
+
+	it('should not go below min size', function()
+		local node = Control():setMinSize(Vector(5, 5))
+		expect(node:getSize()).to.equal(Vector(5, 5))
+
+		node:setSize(Vector(2, 2))
+		expect(node:getSize()).to.equal(Vector(5, 5))
+
+		node:setSize(Vector(-10, -10))
+		expect(node:getSize()).to.equal(Vector(5, 5))
+
+		node:setSize(Vector(10, 10))
+		expect(node:getSize()).to.equal(Vector(10, 10))
+	end)
 end)

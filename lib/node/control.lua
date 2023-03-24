@@ -5,6 +5,7 @@ function Control:new(anchor)
 	Control.super.new(self)
 	self._anchor = (anchor or Vector.TOP_LEFT):normalizedInGrid()
 	self._size = Vector(0, 0)
+	self._minSize = Vector(0, 0)
 	self._logger = Logger.new('Control')
 end
 
@@ -15,7 +16,10 @@ function Control:getTopLeftCorner()
 end
 
 function Control:getSize()
-	return self._size:clone()
+	return Vector(
+		math.max(self._minSize.x, self._size.x),
+		math.max(self._minSize.y, self._size.y)
+	)
 end
 
 function Control:setSize(size)
@@ -23,6 +27,15 @@ function Control:setSize(size)
 		self._size = size
 	else
 		self._logger:warn('Invalid value for size: ' .. tostring(size))
+	end
+	return self
+end
+
+function Control:setMinSize(size)
+	if Vector.isvector(size) and size.x >= 0 and size.y >= 0 then
+		self._minSize = size
+	else
+		self._logger:warn('Invalid value for min size: ' .. tostring(size))
 	end
 	return self
 end
