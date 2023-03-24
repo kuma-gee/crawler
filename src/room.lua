@@ -1,5 +1,4 @@
-local Room = {}
-Room.__index = Room
+local Room = Class:extend()
 
 local dir_to_letter = {
 	[Vector.LEFT] = 'W',
@@ -18,8 +17,9 @@ local letter_to_image = {
 	['EW'] = love.graphics.newImage('assets/Walls_EW_0.png', {}),
 }
 
-function Room.new(p, d)
-	return setmetatable({ pos = p, doors = d }, Room)
+function Room:new(p, d)
+	self.pos = p
+	self.doors = d
 end
 
 function Room:canMove(dir)

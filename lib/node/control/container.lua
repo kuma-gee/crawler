@@ -1,8 +1,8 @@
 local Control = require 'lib.node.control'
 local Container = Control:extend()
 
-function Container:new(dir, align)
-	Container.super.new(self, align)
+function Container:new(dir, anchor)
+	Container.super.new(self, anchor)
 	self._pad = { 0, 0, 0, 0 }
 	self._dir = dir or Vector.DOWN
 	self._logger = Logger.new('Container')
@@ -86,7 +86,7 @@ function Container:_updateSize()
 end
 
 function Container:draw()
-	local pos = self:getPosition()
+	local pos = self:getTopLeftCorner()
 	local size = self:getSize()
 
 	self:drawInColor(self._bgColor, function()

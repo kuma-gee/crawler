@@ -24,7 +24,7 @@ function Node:addChild(...)
 end
 
 function Node:eachChild(fn)
-	for _, child in ipairs(self._children) do
+	for _, child in ipairs(self._children or {}) do
 		fn(child)
 	end
 end

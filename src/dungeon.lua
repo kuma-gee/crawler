@@ -1,7 +1,6 @@
+local Node = require 'lib.node'
 local Room = require 'src.room'
-
-local Dungeon = {}
-Dungeon.__index = Dungeon
+local Dungeon = Node:extend()
 
 local move_dirs = { Vector.UP, Vector.DOWN, Vector.LEFT, Vector.RIGHT }
 
@@ -9,20 +8,20 @@ local function _randomStart(x, y)
 	return Vector(math.random(1, x), math.random(1, y))
 end
 
-function Dungeon.new(w, h)
-	local dungeon = setmetatable({ size = Vector(w, h), pos = _randomStart(w, h), map = {} }, Dungeon)
-
+function Dungeon:new(w, h)
+	local map = {}
 	for x = 1, w do
-		dungeon.map[x] = {}
+		map[x] = {}
 
 		for y = 1, h do
-			dungeon.map[x][y] = nil
+			map[x][y] = nil
 		end
 	end
 
-	dungeon:move(Vector.ZERO)
-
-	return dungeon
+	self.map = map
+	self.pos = _randomStart(w, h)
+	self.size = Vector(w, h)
+	self:move(Vector.ZERO)
 end
 
 function Dungeon:move(dir)
@@ -60,7 +59,7 @@ function Dungeon:_generateRoom(initial_dir)
 	end
 
 
-	self.map[self.pos.x][self.pos.y] = Room.new(self.pos, doors)
+	self.map[self.pos.x][self.pos.y] = Room(self.pos, doors)
 end
 
 function Dungeon:_calcDirections(init_dir)
@@ -98,12 +97,11 @@ function Dungeon:draw()
 	for _, row in pairs(self.map) do
 		for _, col in pairs(row) do
 			local size = Vector(10, 10)
-			local offset = Vector(love.graphics.getWidth(), love.graphics.getHeight()) - self.size:permul(size + Vector(1, 1))
+			local offset = Vector(love.graphics.getWidth(), love.graphics.getHeight()) -
+				self.size:permul(size + Vector(1, 1))
 			col:draw_map(self.pos, size, offset)
 		end
 	end
 end
 
-local default = Dungeon.new(10, 10)
-
-return default
+return Dungeon(10, 10)

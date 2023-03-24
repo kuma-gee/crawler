@@ -1,30 +1,18 @@
-local Button = require 'lib.node.control.button'
-local Container = require 'lib.node.control.container'
-local Label = require 'lib.node.control.label'
-local Theme = require 'lib.node.control.theme'
 local Node = require 'lib.node'
 
 local Input = require 'lib.input'
 
 local Player = require "src.player"
 local Dungeon = require 'src.dungeon'
+local MainContainer = require 'src.main-container'
 
 Logger.setLoggingLevel(Logger.Level.DEBUG)
 
-local btn = Button()
-    :setTheme({ background = { 0, 0, 1, 0.5 }, padding = 5 })
-    :addChild(Label("First"))
 
 local root = Node():addChild(
+    Dungeon,
     Player,
-    Container(Vector.DOWN):setTheme(Theme({ background = { 1, 0, 0, 1 }, padding = 5 }))
-    :addChild(btn)
-    :addChild(
-        Button()
-        :setTheme({ background = { 0, 1, 0, 0.5 }, padding = 5 })
-        :addChild(Label("Second"))
-        :addChild(Label("Second.2"))
-    )
+    MainContainer
 )
 
 function love.load()
@@ -34,12 +22,6 @@ function love.load()
     -- math.randomseed(os.time())
 
     Input.onInput:register(function(ev) root:input(ev) end)
-
-
-    btn.onClick:register(function()
-        print('Clicked')
-    end)
-
 
     Player.onMove:register(function(dir)
         Dungeon:move(dir)
@@ -56,7 +38,6 @@ function love.load()
 end
 
 function love.draw()
-    Dungeon:draw() -- TODO change to Node
     root:draw()
 end
 
