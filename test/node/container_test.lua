@@ -5,23 +5,53 @@ local describe, it, before, expect = lust.describe, lust.it, lust.before, lust.e
 
 describe('Container', function()
 	for _, args in ipairs({
-		{ Vector.LEFT,  Vector(9, 4) },
-		{ Vector.RIGHT, Vector(9, 4) },
-		{ Vector.DOWN,  Vector(5, 8) },
-		{ Vector.UP,    Vector(5, 8) },
-	}) do
-		it('align children in direction ' .. tostring(args[1]), function()
-			local container = Container(args[1])
-			container:addChild(
-				Control():setSize(Vector(5, 2)),
-				Control():setSize(Vector(2, 2)),
-				Control():setSize(Vector(2, 4))
-			)
-			container:update()
+		{ { Vector.RIGHT, Vector.TOP_LEFT }, { Vector(5, 2), Vector(2, 2) },
+			Vector(7, 2), { Vector(0, 0), Vector(5, 0) } },
+		{ { Vector.RIGHT, Vector.TOP_RIGHT }, { Vector(5, 2), Vector(2, 2) },
+			Vector(7, 2), { Vector(-7, 0), Vector(-2, 0) } },
+		{ { Vector.RIGHT, Vector.BOT_LEFT }, { Vector(5, 2), Vector(2, 2) },
+			Vector(7, 2), { Vector(0, -2), Vector(5, -2) } },
+		{ { Vector.RIGHT, Vector.BOT_RIGHT }, { Vector(5, 2), Vector(2, 2) },
+			Vector(7, 2), { Vector(-7, -2), Vector(-2, -2) } },
 
-			expect(container:getSize()).to.equal(args[2])
-		end)
+		{ { Vector.DOWN, Vector.TOP_LEFT }, { Vector(5, 2), Vector(2, 2) },
+			Vector(5, 4), { Vector(0, 0), Vector(0, 2) } },
+		{ { Vector.DOWN, Vector.TOP_RIGHT }, { Vector(5, 2), Vector(2, 2) },
+			Vector(5, 4), { Vector(-5, 0), Vector(-5, 2) } },
+		{ { Vector.DOWN, Vector.BOT_LEFT }, { Vector(5, 2), Vector(2, 2) },
+			Vector(5, 4), { Vector(0, -4), Vector(0, -2) } },
+		{ { Vector.DOWN,  Vector.BOT_RIGHT }, { Vector(5, 2), Vector(2, 2) },
+			Vector(5, 4), { Vector(-5, -4), Vector(-5, -2) } },
+	}) do
+		local containerArgs = args[1]
+
+		it('align children in ' .. tostring(containerArgs[1]) ..
+			' direction with anchor ' .. tostring(containerArgs[2]), function()
+				local controlArgs = args[2]
+
+				local container = Container(containerArgs[1], containerArgs[2])
+				local controls = {}
+
+				for _, size in ipairs(controlArgs) do
+					local c = Control():setSize(size)
+					table.insert(controls, c)
+					container:addChild(c)
+				end
+
+				container:update()
+
+				local expectedSize = args[3]
+				expect(container:getSize()).to.equal(expectedSize)
+
+				local expectedPositions = args[4]
+
+				for i, c in ipairs(controls) do
+					expect(c:getTopLeftCorner()).to.equal(expectedPositions[i])
+				end
+			end)
 	end
+
+
 
 	it('align with padding', function()
 		local container = Container(Vector.DOWN):setPadding(1)

@@ -40,6 +40,10 @@ local up = new(0, -1)
 local down = new(0, 1)
 local left = new(-1, 0)
 local right = new(1, 0)
+local top_left = new(-1, -1)
+local top_right = new(1, -1)
+local bot_left = new(-1, 1)
+local bot_right = new(1, 1)
 
 local function fromPolar(angle, radius)
 	radius = radius or 1
@@ -70,14 +74,32 @@ function vector:unpack()
 end
 
 function vector:__tostring()
+	if self == zero then
+		return "ZERO"
+	end
 	if self == up then
 		return "UP"
-	elseif self == down then
+	end
+	if self == down then
 		return "DOWN"
-	elseif self == left then
+	end
+	if self == left then
 		return "LEFT"
-	elseif self == right then
+	end
+	if self == right then
 		return "RIGHT"
+	end
+	if self == top_left then
+		return "TOP_LEFT"
+	end
+	if self == top_right then
+		return "TOP_RIGHT"
+	end
+	if self == bot_left then
+		return "BOT_LEFT"
+	end
+	if self == bot_right then
+		return "BOT_RIGHT"
 	end
 
 	return "(" .. tonumber(self.x) .. "," .. tonumber(self.y) .. ")"
@@ -160,6 +182,18 @@ function vector.dist2(a, b)
 	return (dx * dx + dy * dy)
 end
 
+local function _normalizeToOne(v)
+	if v == 0 then
+		return 0
+	end
+
+	return math.floor(v / math.abs(v))
+end
+
+function vector:normalizedInGrid()
+	return Vector(_normalizeToOne(self.x), _normalizeToOne(self.y))
+end
+
 function vector:normalizeInplace()
 	local l = self:len()
 	if l > 0 then
@@ -236,6 +270,10 @@ return setmetatable({
 	DOWN            = down,
 	LEFT            = left,
 	RIGHT           = right,
+	TOP_LEFT        = top_left,
+	TOP_RIGHT       = top_right,
+	BOT_LEFT        = bot_left,
+	BOT_RIGHT       = bot_right,
 }, {
 	__call = function(_, ...) return new(...) end
 })

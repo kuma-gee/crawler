@@ -1,8 +1,8 @@
 local Control = require 'lib.node.control'
 local Container = Control:extend()
 
-function Container:new(dir)
-	Container.super.new(self)
+function Container:new(dir, align)
+	Container.super.new(self, align)
 	self._pad = { 0, 0, 0, 0 }
 	self._dir = dir or Vector.DOWN
 	self._logger = Logger.new('Container')
@@ -54,19 +54,25 @@ function Container:setPadding(v)
 end
 
 function Container:_getInnerTopLeftCorner()
-	return self:getPosition() + Vector(self:_getLeftPadding(), self:_getTopPadding())
+	return self:getTopLeftCorner() + Vector(self:_getLeftPadding(), self:_getTopPadding())
 end
 
 function Container:update(_)
-	local childrenSize = Vector(0, 0)
-	local currPos = self:_getInnerTopLeftCorner()
+	self:_updateSize()
 
+	local currPos = self:_getInnerTopLeftCorner()
 	self:eachChild(function(child)
 		child:setPosition(currPos:clone())
+		currPos = currPos + child:getSize():permul(self._dir)
+	end)
+end
+
+function Container:_updateSize()
+	local childrenSize = Vector(0, 0)
+	self:eachChild(function(child)
 		child:update()
 
 		local childSize = child:getSize()
-		currPos = currPos + childSize:permul(self._dir)
 		childrenSize = childrenSize + childSize:permul(self._dir:abs())
 
 		if self._dir * Vector.UP == 0 then

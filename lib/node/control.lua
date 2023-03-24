@@ -1,10 +1,16 @@
 local Node2D = require 'lib.node.node2d'
 local Control = Node2D:extend()
 
-function Control:new()
+function Control:new(anchor)
 	Control.super.new(self)
+	self._anchor = (anchor or Vector.TOP_LEFT):normalizedInGrid()
 	self._size = Vector(0, 0)
 	self._logger = Logger.new('Control')
+end
+
+function Control:getTopLeftCorner()
+	local center = self:getPosition() - (self._anchor:permul(self._size / 2))
+	return center - (self._size / 2)
 end
 
 function Control:getSize()
