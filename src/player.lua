@@ -5,9 +5,15 @@ local Player = Node2D:extend()
 function Player:new()
 	Player.super.new(self)
 	self.onMove = Signal()
+	self.onHealthChange = Signal()
 
-	self._health = 5
+	self._max_health = 5
+	self._health = self._max_health
 	self._inventory = {}
+end
+
+function Player:load()
+	self.onHealthChange:emit(self._health, self._max_health)
 end
 
 function Player:input(ev)
@@ -27,6 +33,10 @@ end
 
 function Player:getInventory()
 	return self._inventory
+end
+
+function Player:addItem(item)
+	table.insert(self._inventory, item)
 end
 
 return Player

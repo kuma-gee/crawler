@@ -3,7 +3,7 @@ local Label = Control:extend()
 
 function Label:new(t)
 	Label.super.new(self)
-	self._text = t
+	self._text = t or ''
 	self._textColor = { 0, 0, 0, 1 }
 end
 

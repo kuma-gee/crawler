@@ -19,6 +19,14 @@ local event_values = {
 	[Events.Nothing] = 800,
 }
 
+local loot_values = {
+	{ Loot.Torch, 1 },
+	{ Loot.Sword, 1 },
+	{ Loot.Armor, 1 },
+	{ Loot.Knife, 1 },
+	{ Loot.Corpse, 1 },
+}
+
 local function has_value(tab, val)
 	for _, value in ipairs(tab) do
 		if value == val then
@@ -101,7 +109,7 @@ function Game:new()
 
 	self.player = Player()
 	self.dungeon = Dungeon(20, 20, self.player)
-	local ui = MainContainer(self.dungeon)
+	local ui = MainContainer(self.dungeon, self.player)
 
 	self:addChild(self.player, self.dungeon, ui)
 
