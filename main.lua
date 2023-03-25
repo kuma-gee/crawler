@@ -10,6 +10,8 @@ function love.load()
     love.graphics.setNewFont(12)
     love.graphics.setBackgroundColor(0.14, 0.10, 0.08)
 
+    -- love.window.setMode(1920 / 4, 1080 / 4, { resizable = true })
+
     -- math.randomseed(os.time())
 
     Input.onInput:register(function(ev) root:input(ev) end)

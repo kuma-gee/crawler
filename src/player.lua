@@ -7,6 +7,7 @@ function Player:new()
 	self.onMove = Signal()
 
 	self._health = 5
+	self._inventory = {}
 end
 
 function Player:input(ev)
@@ -22,6 +23,10 @@ function Player:input(ev)
 			self.onMove:emit(Vector(1, 0))
 		end
 	end
+end
+
+function Player:getInventory()
+	return self._inventory
 end
 
 return Player

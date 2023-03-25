@@ -28,7 +28,6 @@ function Dungeon:new(w, h, player)
 	self.size = Vector(w, h)
 
 	player.onMove:register(function(dir) self:move(dir) end)
-	self:move(Vector.ZERO)
 end
 
 function Dungeon:getSize()

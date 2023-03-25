@@ -11,17 +11,28 @@ local player = Player()
 local dungeon = Dungeon(20, 20, player)
 local ui = MainContainer():addChild(Map(dungeon))
 
-local Events = { Enemy = 'enemy', NPC = 'npc', Loot = 'loot', Exit = 'exit', Nothing = 'nothing' }
-local Loot = { Torch = 0, Sword = 1, Armor = 2 }
+Events = { Enemy = 'enemy', NPC = 'npc', Loot = 'loot', Exit = 'exit', Nothing = 'nothing' }
+Loot = { Torch = 'torch', Sword = 'sword', Armor = 'armor', Knife = 'knife', Corpse = 'corpse' }
+
 local foundExit = false
+local declinedTorch = false
 
 local event_values = {
 	[Events.Enemy] = 0,
-	[Events.NPC] = 0,
 	[Events.Loot] = 0,
 	[Events.Exit] = 0,
 	[Events.Nothing] = 800,
 }
+
+local function has_value(tab, val)
+	for _, value in ipairs(tab) do
+		if value == val then
+			return true
+		end
+	end
+
+	return false
+end
 
 local function _totalEventValue()
 	local total = 0
@@ -45,6 +56,7 @@ local function _randomEvent()
 	local rand = math.random(0, total)
 
 	for _, v in pairs(values) do
+		print(table.concat(v, ','))
 		if rand <= v[2] then
 			return v[1]
 		end
@@ -68,10 +80,25 @@ local function _updateEventChances(ev)
 		event_values[Events.Exit] = 0
 	end
 
-	_increaseEvent(Events.Enemy, 20)
-	-- _increaseEvent(Events.NPC, 10)
-	_increaseEvent(Events.Loot, 20)
-	_resetEvent(ev)
+	local items = player:getInventory()
+
+	if #items == 0 then
+		_increaseEvent(Events.Loot, 1000) -- increase chance to get torch
+	elseif #items == 1 and has_value(items, Loot.Torch) then
+		_increaseEvent(Events.Loot, 100) -- increaase chance to get armor or weapon
+	else
+		_increaseEvent(Events.Loot, 20)
+	end
+
+	if #items == 0 then
+		_increaseEvent(Events.Enemy, 5)
+	else
+		_increaseEvent(Events.Enemy, 20)
+	end
+
+	if ev ~= Events.Nothing then
+		_resetEvent(ev)
+	end
 end
 
 function Game:new()
@@ -88,6 +115,7 @@ function Game:new()
 
 		_updateEventChances(ev)
 	end)
+	dungeon:move(Vector.ZERO)
 end
 
 return Game

@@ -10,10 +10,13 @@ local btn = Button()
 	:setTheme({ background = { 0, 0.5, 0, 0.5 }, padding = 5 })
 	:addChild(Label("Inventory"))
 
+local eventText = Label("Event here"):setTheme({ color = { 1, 1, 1, 1 } })
+
 function MainContainer:new()
 	MainContainer.super.new(self, Vector.RIGHT, Vector.BOT_LEFT)
 	self:setTheme({ background = { 0, 0, 0, 0.7 }, padding = 5 })
 	self:addChild(btn)
+	self:addChild(eventText)
 end
 
 function MainContainer:input(ev)
@@ -24,6 +27,9 @@ function MainContainer:input(ev)
 	end
 
 	MainContainer.super.input(self, ev)
+end
+
+function MainContainer:onEvent(ev)
 end
 
 return MainContainer
