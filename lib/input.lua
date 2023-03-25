@@ -30,7 +30,7 @@ function Input:keyreleased(key)
 end
 
 function Input:resize(w, h)
-	self.onInput:emit(ResizeEvent(w, h))
+	self.onInput:emit(ResizeEvent(Unit.w(1), Unit.h(1)))
 end
 
 return Input()

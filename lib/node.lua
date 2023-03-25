@@ -1,5 +1,14 @@
 local Node = Class:extend()
 
+local function indexOf(coll, item)
+	for i, x in ipairs(coll) do
+		if x == item then
+			return i
+		end
+	end
+	return -1
+end
+
 function Node:new()
 	self._children = {}
 	self._parent = nil
@@ -21,6 +30,17 @@ function Node:addChild(...)
 	end
 
 	return self
+end
+
+function Node:removeChild(child)
+	local toRemove = indexOf(self._children, child)
+	if toRemove ~= -1 then
+		table.remove(self._children, toRemove)
+	end
+end
+
+function Node:clearChildren()
+	self._children = {}
 end
 
 function Node:eachChild(fn)

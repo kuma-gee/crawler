@@ -6,7 +6,6 @@ function Container:new(dir, anchor)
 	self._pad = { 0, 0, 0, 0 }
 	self._dir = dir or Vector.DOWN
 	self._logger = Logger.new('Container')
-	self._bgColor = { 0, 0, 0, 0 }
 end
 
 function Container:_getTopPadding()
@@ -86,24 +85,9 @@ function Container:_updateSize()
 	Container.super.setSize(self, childrenSize)
 end
 
-function Container:draw()
-	local pos = self:getTopLeftCorner()
-	local size = self:getSize()
-
-	self:drawInColor(self._bgColor, function()
-		love.graphics.rectangle("fill", pos.x, pos.y, size.x, size.y)
-	end)
-
-	Container.super.draw(self)
-end
-
 function Container:setTheme(theme)
 	if theme.padding then
 		self:setPadding(theme.padding)
-	end
-
-	if theme.background then
-		self._bgColor = theme.background
 	end
 
 	return Container.super.setTheme(self, theme)

@@ -1,15 +1,10 @@
 local Player = require "src.player"
 local Dungeon = require 'src.dungeon'
 local MainContainer = require 'src.main-container'
-local Map = require 'src.map'
 
 
 local Node = require 'lib.node'
 local Game = Node:extend()
-
-local player = Player()
-local dungeon = Dungeon(20, 20, player)
-local ui = MainContainer():addChild(Map(dungeon))
 
 Events = { Enemy = 'enemy', NPC = 'npc', Loot = 'loot', Exit = 'exit', Nothing = 'nothing' }
 Loot = { Torch = 'torch', Sword = 'sword', Armor = 'armor', Knife = 'knife', Corpse = 'corpse' }
@@ -47,24 +42,6 @@ local function _totalEventValue()
 	return accum, total
 end
 
-local function _randomEvent()
-	if dungeon:getDiscoveredPercentage() > 0.8 then
-		return Events.Exit
-	end
-
-	local values, total = _totalEventValue()
-	local rand = math.random(0, total)
-
-	for _, v in pairs(values) do
-		print(table.concat(v, ','))
-		if rand <= v[2] then
-			return v[1]
-		end
-	end
-
-	return Events.Nothing
-end
-
 local function _increaseEvent(ev, value)
 	event_values[ev] = event_values[ev] + value
 end
@@ -73,14 +50,31 @@ local function _resetEvent(ev)
 	event_values[ev] = 0
 end
 
-local function _updateEventChances(ev)
+function Game:_randomEvent()
+	if self.dungeon:getDiscoveredPercentage() > 0.8 then
+		return Events.Exit
+	end
+
+	local values, total = _totalEventValue()
+	local rand = math.random(0, total)
+
+	for _, v in pairs(values) do
+		if rand <= v[2] then
+			return v[1]
+		end
+	end
+
+	return Events.Nothing
+end
+
+function Game:_updateEventChances(ev)
 	if not foundExit then
-		event_values[Events.Exit] = dungeon:getDiscoveredPercentage() * 100
+		event_values[Events.Exit] = self.dungeon:getDiscoveredPercentage() * 100
 	else
 		event_values[Events.Exit] = 0
 	end
 
-	local items = player:getInventory()
+	local items = self.player:getInventory()
 
 	if #items == 0 then
 		_increaseEvent(Events.Loot, 1000) -- increase chance to get torch
@@ -103,19 +97,30 @@ end
 
 function Game:new()
 	Game.super.new(self)
-	self:addChild(player, dungeon, ui)
 
-	dungeon.onNewRoom:register(function()
-		local ev = _randomEvent()
-		print(ev)
+
+	self.player = Player()
+	self.dungeon = Dungeon(20, 20, self.player)
+	local ui = MainContainer(self.dungeon)
+
+	self:addChild(self.player, self.dungeon, ui)
+
+	self.dungeon.onNewRoom:register(function()
+		local ev = self:_randomEvent()
 
 		if ev == Events.Exit then
 			foundExit = true
 		end
 
-		_updateEventChances(ev)
+		ui:onEvent(ev)
+
+		self:_updateEventChances(ev)
 	end)
-	dungeon:move(Vector.ZERO)
+	self.dungeon:move(Vector.ZERO)
+end
+
+function Game:draw()
+	Game.super.draw(self)
 end
 
 return Game

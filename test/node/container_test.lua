@@ -20,35 +20,35 @@ describe('Container', function()
 			Vector(5, 4), { Vector(-5, 0), Vector(-5, 2) } },
 		{ { Vector.DOWN, Vector.BOT_LEFT }, { Vector(5, 2), Vector(2, 2) },
 			Vector(5, 4), { Vector(0, -4), Vector(0, -2) } },
-		{ { Vector.DOWN,  Vector.BOT_RIGHT }, { Vector(5, 2), Vector(2, 2) },
+		{ { Vector.DOWN, Vector.BOT_RIGHT }, { Vector(5, 2), Vector(2, 2) },
 			Vector(5, 4), { Vector(-5, -4), Vector(-5, -2) } },
 	}) do
 		local containerArgs = args[1]
 
 		it('align children in ' .. tostring(containerArgs[1]) ..
 			' direction with anchor ' .. tostring(containerArgs[2]), function()
-				local controlArgs = args[2]
+			local controlArgs = args[2]
 
-				local container = Container(containerArgs[1], containerArgs[2])
-				local controls = {}
+			local container = Container(containerArgs[1], containerArgs[2])
+			local controls = {}
 
-				for _, size in ipairs(controlArgs) do
-					local c = Control():setSize(size)
-					table.insert(controls, c)
-					container:addChild(c)
-				end
+			for _, size in ipairs(controlArgs) do
+				local c = Control():setSize(size)
+				table.insert(controls, c)
+				container:addChild(c)
+			end
 
-				container:update()
+			container:update()
 
-				local expectedSize = args[3]
-				expect(container:getSize()).to.equal(expectedSize)
+			local expectedSize = args[3]
+			expect(container:getSize()).to.equal(expectedSize)
 
-				local expectedPositions = args[4]
+			local expectedPositions = args[4]
 
-				for i, c in ipairs(controls) do
-					expect(c:getTopLeftCorner()).to.equal(expectedPositions[i])
-				end
-			end)
+			for i, c in ipairs(controls) do
+				expect(c:getTopLeftCorner()).to.equal(expectedPositions[i])
+			end
+		end)
 	end
 
 	it('align with padding', function()
@@ -112,5 +112,25 @@ describe('Container', function()
 
 		expect(child:getSize()).to.equal(Vector(9, 10))
 		expect(container:getSize()).to.equal(Vector(20, 14))
+	end)
+
+	it('grow child', function()
+		local container = Container(Vector.DOWN):setMinSize(10, 10)
+		local c1, c2, c3 =
+		Control():setSize(Vector(2, 2)),
+			Control():setSize(Vector(2, 2)):setGrow(true),
+			Control():setSize(Vector(2, 2))
+
+		container:addChild(c1, c2, c3)
+		container:update()
+
+		expect(c1:getSize()).to.equal(Vector(2, 2))
+		expect(c1:getTopLeftCorner()).to.equal(Vector(0, 0))
+
+		expect(c2:getSize()).to.equal(Vector(6, 2))
+		expect(c2:getTopLeftCorner()).to.equal(Vector(2, 0))
+
+		expect(c3:getSize()).to.equal(Vector(2, 2))
+		expect(c3:getTopLeftCorner()).to.equal(Vector(8, 0))
 	end)
 end)

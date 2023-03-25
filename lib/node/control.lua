@@ -7,6 +7,7 @@ function Control:new(anchor)
 	self._size = Vector(0, 0)
 	self._minSize = Vector(0, 0)
 	self._logger = Logger.new('Control')
+	self._bgColor = { 0, 0, 0, 0 }
 end
 
 function Control:getTopLeftCorner()
@@ -22,26 +23,45 @@ function Control:getSize()
 	)
 end
 
-function Control:setSize(size)
+function Control:setSize(size, y)
 	if Vector.isvector(size) then
 		self._size = size
+	elseif size ~= nil and y ~= nil then
+		self._size = Vector(size, y)
 	else
 		self._logger:warn('Invalid value for size: ' .. tostring(size))
 	end
 	return self
 end
 
-function Control:setMinSize(size)
+function Control:setMinSize(size, y)
 	if Vector.isvector(size) and size.x >= 0 and size.y >= 0 then
 		self._minSize = size
+	elseif size ~= nil and y ~= nil and size >= 0 and y >= 0 then
+		self._minSize = Vector(size, y)
 	else
 		self._logger:warn('Invalid value for min size: ' .. tostring(size))
 	end
 	return self
 end
 
-function Control:setTheme(_)
+function Control:setTheme(theme)
+	if theme.background then
+		self._bgColor = theme.background
+	end
+
 	return self
+end
+
+function Control:draw()
+	local pos = self:getTopLeftCorner()
+	local size = self:getSize()
+
+	self:drawInColor(self._bgColor, function()
+		love.graphics.rectangle("fill", pos.x, pos.y, size.x, size.y)
+	end)
+
+	Control.super.draw(self)
 end
 
 function Control:getMousePosition()

@@ -1,17 +1,18 @@
 local Input = require 'lib.input'
 local Game = require 'src.game'
 
+local push = require 'lib.push'
+local gameWidth, gameHeight = 1920, 1080
+local windowWidth, windowHeight = love.window.getDesktopDimensions()
+push:setupScreen(gameWidth, gameHeight, windowWidth / 2, windowHeight / 2, { fullscreen = false, resizable = true })
+Unit.setScreenSize(gameWidth, gameHeight)
 Logger.setLoggingLevel(Logger.Level.DEBUG)
 
 
 local root = Game()
 
 function love.load()
-    love.graphics.setNewFont(12)
-    love.graphics.setBackgroundColor(0.14, 0.10, 0.08)
-
-    -- love.window.setMode(1920 / 4, 1080 / 4, { resizable = true })
-
+    love.graphics.setNewFont(24)
     -- math.randomseed(os.time())
 
     Input.onInput:register(function(ev) root:input(ev) end)
@@ -21,7 +22,9 @@ function love.load()
 end
 
 function love.draw()
+    push:start()
     root:draw()
+    push:finish()
 end
 
 function love.update(dt)
@@ -48,4 +51,5 @@ end
 
 function love.resize(w, h)
     Input:resize(w, h)
+    push:resize(w, h)
 end

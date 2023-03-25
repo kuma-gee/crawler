@@ -1,9 +1,17 @@
+local width = 0
+local height = 0
+
+local function setScreenSize(w, h)
+	width = w
+	height = h
+end
+
 local function fromWidth(v)
-	return love.graphics.getWidth() * v
+	return width * v
 end
 
 local function fromHeight(v)
-	return love.graphics.getHeight() * v
+	return height * v
 end
 
 local function fromFont(v)
@@ -11,4 +19,4 @@ local function fromFont(v)
 	return v * font:getHeight()
 end
 
-return setmetatable({ w = fromWidth, h = fromHeight, rem = fromFont }, {})
+return setmetatable({ w = fromWidth, h = fromHeight, rem = fromFont, setScreenSize = setScreenSize }, {})

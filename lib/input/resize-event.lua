@@ -2,11 +2,12 @@ local InputEvent = require 'lib.input.input-event'
 local ResizeEvent = InputEvent:extend()
 
 function ResizeEvent:new(w, h)
-	self._size = Vector(w, h)
+	self.w = w
+	self.h = h
 end
 
 function ResizeEvent:getSize()
-	return self._size
+	return self.w, self.h
 end
 
 return ResizeEvent
