@@ -49,6 +49,10 @@ function love.mousereleased(...)
     Input:mousereleased(...)
 end
 
+function love.mousemoved(...)
+    Input:mousemoved(...)
+end
+
 function love.resize(w, h)
     Input:resize(w, h)
     push:resize(w, h)

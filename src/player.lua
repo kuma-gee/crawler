@@ -6,6 +6,7 @@ function Player:new()
 	Player.super.new(self)
 	self.onMove = Signal()
 	self.onHealthChange = Signal()
+	self.onInventoryChange = Signal()
 
 	self._max_health = 5
 	self._health = self._max_health
@@ -37,6 +38,7 @@ end
 
 function Player:addItem(item)
 	table.insert(self._inventory, item)
+	self.onInventoryChange:emit(self._inventory)
 end
 
 return Player

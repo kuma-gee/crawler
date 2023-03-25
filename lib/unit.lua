@@ -1,6 +1,10 @@
 local width = 0
 local height = 0
 
+local function getScreenSize()
+	return width, height
+end
+
 local function setScreenSize(w, h)
 	width = w
 	height = h
@@ -19,4 +23,4 @@ local function fromFont(v)
 	return v * font:getHeight()
 end
 
-return setmetatable({ w = fromWidth, h = fromHeight, rem = fromFont, setScreenSize = setScreenSize }, {})
+return setmetatable({ w = fromWidth, h = fromHeight, rem = fromFont, setScreenSize = setScreenSize, getScreenSize = getScreenSize }, {})

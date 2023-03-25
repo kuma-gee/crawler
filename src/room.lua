@@ -54,4 +54,16 @@ function Room:_getBackground()
 	return letter_to_image[table.concat(letters)]
 end
 
+function Room:setEvent(ev, item)
+	self._event = { ev, item }
+end
+
+function Room:getEvent()
+	return self._event
+end
+
+function Room:removeEvent()
+	self._event = nil
+end
+
 return Room

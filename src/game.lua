@@ -7,10 +7,11 @@ local Node = require 'lib.node'
 local Game = Node:extend()
 
 Events = { Enemy = 'enemy', NPC = 'npc', Loot = 'loot', Exit = 'exit', Nothing = 'nothing' }
-Loot = { Torch = 'torch', Sword = 'sword', Armor = 'armor', Knife = 'knife', Corpse = 'corpse' }
+Loot = { Torch = 'torch', Sword = 'sword', Armor = 'armor', Knife = 'knife', Stone = 'stone' }
+Enemy = { Bat = 'bat', Goblin = 'goblin', Skeleton = 'skeleton' }
 
 local foundExit = false
-local declinedTorch = false
+local spawnedTorch = false
 
 local event_values = {
 	[Events.Enemy] = 0,
@@ -20,21 +21,29 @@ local event_values = {
 }
 
 local loot_values = {
-	{ Loot.Torch, 1 },
-	{ Loot.Sword, 1 },
-	{ Loot.Armor, 1 },
-	{ Loot.Knife, 1 },
-	{ Loot.Corpse, 1 },
+	{ Loot.Torch, 100 },
+	{ Loot.Knife, 20 },
+	{ Loot.Armor, 40 },
+	{ Loot.Sword, 50 },
 }
 
-local function has_value(tab, val)
-	for _, value in ipairs(tab) do
-		if value == val then
-			return true
+local enemy_values = {
+	{ Enemy.Bat, 100 },
+	{ Enemy.Goblin, 20 },
+	{ Enemy.Skeleton, 100 },
+}
+
+local function _randomItem(items)
+	local rand = math.random(0, 100)
+
+	for _, v in pairs(items) do
+		if rand <= v[2] then
+
+			return v[1]
 		end
 	end
 
-	return false
+	return Loot.Stone
 end
 
 local function _totalEventValue()
@@ -84,10 +93,8 @@ function Game:_updateEventChances(ev)
 
 	local items = self.player:getInventory()
 
-	if #items == 0 then
+	if #items == 0 and not spawnedTorch then
 		_increaseEvent(Events.Loot, 1000) -- increase chance to get torch
-	elseif #items == 1 and has_value(items, Loot.Torch) then
-		_increaseEvent(Events.Loot, 100) -- increaase chance to get armor or weapon
 	else
 		_increaseEvent(Events.Loot, 20)
 	end
@@ -103,27 +110,57 @@ function Game:_updateEventChances(ev)
 	end
 end
 
+function Game:_showRoomEvent(room)
+	local event_fn = {
+		[Events.Loot] = function(loot) self.ui:showLootEvent(loot) end,
+		[Events.Enemy] = function(enemy) self.ui:showEnemyEvent(enemy) end,
+	}
+
+	local ev = room:getEvent()
+	self.ui:showNoEvents()
+
+	if ev ~= nil and event_fn[ev[1]] ~= nil then
+		event_fn[ev[1]](ev[2])
+	end
+end
+
+function Game:_setNewRoomEvent(room)
+	local ev = self:_randomEvent()
+
+	local item = nil
+	if ev == Events.Loot then
+		item = _randomItem(loot_values)
+		if item == Loot.Torch then
+			table.remove(loot_values, 1)
+			spawnedTorch = true
+		end
+	end
+	if ev == Events.Enemy then
+		item = _randomItem(enemy_values)
+	end
+	room:setEvent(ev, item)
+	self:_showRoomEvent(room)
+
+	if ev == Events.Exit then
+		foundExit = true
+	end
+	self:_updateEventChances(ev)
+end
+
 function Game:new()
 	Game.super.new(self)
 
-
 	self.player = Player()
 	self.dungeon = Dungeon(20, 20, self.player)
-	local ui = MainContainer(self.dungeon, self.player)
+	self.ui = MainContainer(self.dungeon, self.player)
+	self:addChild(self.player, self.dungeon, self.ui)
 
-	self:addChild(self.player, self.dungeon, ui)
-
-	self.dungeon.onNewRoom:register(function()
-		local ev = self:_randomEvent()
-
-		if ev == Events.Exit then
-			foundExit = true
-		end
-
-		ui:onEvent(ev)
-
-		self:_updateEventChances(ev)
+	self.ui.onItemPickup:register(function(loot)
+		self.player:addItem(loot)
+		self.dungeon:activeRoom():removeEvent()
 	end)
+	self.dungeon.onNewRoom:register(function(room) self:_setNewRoomEvent(room) end)
+	self.dungeon.onRoomEnter:register(function(room) self:_showRoomEvent(room) end)
 	self.dungeon:move(Vector.ZERO)
 end
 

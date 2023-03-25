@@ -1,6 +1,10 @@
 local Control = require 'lib.node.control'
 local Map = Control:extend()
 
+local activeColor = { 0, 1, 0, 1 }
+local lootColor = { 0, 0, 1, 1 }
+local enemyColor = { 1, 0, 0, 1 }
+
 function Map:new(dungeon)
 	Map.super.new(self)
 	self._dungeon = dungeon
@@ -43,12 +47,25 @@ function Map:draw()
 				end
 			end)
 
+			local center = pos + roomSize / 2
 			local isActive = self._dungeon.pos == roomPos
+			local ev = room:getEvent()
 			if isActive then
-				local center = pos + roomSize / 2
-				self:drawInColor({ 0, 1, 0, 1 }, function()
+				self:drawInColor(activeColor, function()
 					love.graphics.circle('fill', center.x, center.y, 2)
 				end)
+			elseif ev ~= nil then
+				if ev[1] == Events.Loot then
+					self:drawInColor(lootColor, function()
+						love.graphics.circle('fill', center.x, center.y, 2)
+					end)
+				end
+
+				if ev[1] == Events.Enemy then
+					self:drawInColor(enemyColor, function()
+						love.graphics.circle('fill', center.x, center.y, 2)
+					end)
+				end
 			end
 		end
 	end

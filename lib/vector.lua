@@ -152,12 +152,12 @@ function vector:abs()
 end
 
 function vector:multiply(b)
-	assert(isvector(b), "permul: wrong argument types (<vector> expected)")
+	assert(isvector(b), "multiply: wrong argument types (<vector> expected)")
 	return new(self.x * b.x, self.y * b.y)
 end
 
 function vector:divide(b)
-	assert(isvector(b), "permul: wrong argument types (<vector> expected)")
+	assert(isvector(b), "divide: wrong argument types (<vector> expected)")
 	return new(self.x / b.x, self.y / b.y)
 end
 

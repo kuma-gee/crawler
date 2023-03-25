@@ -61,7 +61,7 @@ function Container:update(_)
 	self:_updateSize()
 
 	local currPos = self:_getInnerTopLeftCorner()
-	self:eachChild(function(child)
+	self:eachVisibleChild(function(child)
 		child:setPosition(currPos:clone())
 		currPos = currPos + child:getSize():multiply(self._dir)
 	end)
@@ -69,7 +69,7 @@ end
 
 function Container:_updateSize()
 	local childrenSize = Vector(0, 0)
-	self:eachChild(function(child)
+	self:eachVisibleChild(function(child)
 		child:update()
 
 		local childSize = child:getSize()

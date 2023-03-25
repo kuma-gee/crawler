@@ -10,24 +10,34 @@ local MainContainer = Container:extend()
 
 local textTheme = { color = { 1, 1, 1, 1 } }
 local health = Label():setTheme(textTheme)
+local inventory = Container(Vector.DOWN):setTheme({ 0, 0.5, 0, 0.5 })
 local statusContainer = Container(Vector.DOWN)
 	:setTheme({ background = { 0, 0.5, 0, 0.5 } })
 	:addChild(health)
+	:addChild(inventory)
+
+local actionsContainer = Container(Vector.RIGHT)
 
 local eventText = Label("Event here"):setTheme(textTheme)
-local choiceContainer = Container(Vector.RIGHT)
-	:setTheme({ background = { 0, 0.5, 0, 0.5 } })
 local mainTextContainer = Container(Vector.DOWN)
 	:setTheme({ background = { 0.5, 0.5, 0, 0.5 } })
 	:addChild(eventText)
-	:addChild(choiceContainer)
+	:addChild(actionsContainer)
 
 function MainContainer:new(dungeon, player)
 	MainContainer.super.new(self, Vector.RIGHT, Vector.BOT_LEFT)
 	self:setTheme({ background = { 0.5, 0, 0, 0.7 } })
 
+	self.onItemPickup = Signal()
+
 	player.onHealthChange:register(function(hp, max_hp)
 		health:setText('HP: ' .. hp .. ' / ' .. max_hp)
+	end)
+	player.onInventoryChange:register(function(items)
+		inventory:clearChildren()
+		for _, item in ipairs(items) do
+			inventory:addChild(Label(item):setTheme(textTheme))
+		end
 	end)
 
 	self:addChild(
@@ -47,8 +57,26 @@ function MainContainer:input(ev)
 	MainContainer.super.input(self, ev)
 end
 
-function MainContainer:onEvent(ev)
-	eventText:setText(ev)
+function MainContainer:showNoEvents()
+	eventText:setText("")
+	actionsContainer:clearChildren()
+end
+
+function MainContainer:showEnemyEvent(enemy)
+	eventText:setText('You encounter a ' .. enemy .. '. What do you do?')
+end
+
+function MainContainer:showLootEvent(loot)
+	eventText:setText('You found a ' .. loot .. '.')
+
+	local pickupBtn = Button():addChild(Label('Pickup'):setTheme(textTheme))
+	pickupBtn.onClick:register(function()
+		self.onItemPickup:emit(loot)
+		eventText:setText('You picked up a ' .. loot .. '.')
+		actionsContainer:clearChildren()
+	end)
+
+	actionsContainer:addChild(pickupBtn)
 end
 
 return MainContainer

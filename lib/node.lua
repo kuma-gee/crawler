@@ -44,7 +44,7 @@ function Node:clearChildren()
 end
 
 function Node:eachChild(fn)
-	for _, child in ipairs(self._children or {}) do
+	for _, child in ipairs(self:getChildren() or {}) do
 		fn(child)
 	end
 end
