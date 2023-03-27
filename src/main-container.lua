@@ -68,7 +68,10 @@ end
 function MainContainer:showLootEvent(loot)
 	eventText:setText('You found a ' .. loot .. '.')
 
-	local pickupBtn = Button():addChild(Label('Pickup'):setTheme(textTheme))
+	local pickupBtn = Button()
+		:addChild(Label('Pickup'):setTheme(textTheme))
+		:setTheme({ background = { 1, 1, 0, 0.5 } })
+		:setHoverTheme({ background = { 0, 1, 0, 0.5 } })
 	pickupBtn.onClick:register(function()
 		self.onItemPickup:emit(loot)
 		eventText:setText('You picked up a ' .. loot .. '.')

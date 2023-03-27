@@ -11,6 +11,7 @@ function Button:new()
 	self._isHover = false
 	self._isPressed = false
 	self._logger = Logger.new('Button')
+	self._hoverTheme = {}
 end
 
 function Button:isHover()
@@ -31,6 +32,14 @@ function Button:_updateHover(ev)
 	self._isHover = insideX and insideY
 end
 
+function Button:getTheme()
+	if self._isHover then
+		return self._hoverTheme
+	end
+
+	return Button.super.getTheme(self)
+end
+
 function Button:input(event)
 	if event:is(MouseMoveEvent) then
 		self:_updateHover(event)
@@ -44,6 +53,11 @@ function Button:input(event)
 	end
 
 	Button.super.input(self, event)
+end
+
+function Button:setHoverTheme(theme)
+	self._hoverTheme = theme
+	return self
 end
 
 return Button

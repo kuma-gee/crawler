@@ -7,7 +7,7 @@ function Control:new(anchor)
 	self._size = Vector(0, 0)
 	self._minSize = Vector(0, 0)
 	self._logger = Logger.new('Control')
-	self._bgColor = { 0, 0, 0, 0 }
+	self._theme = {}
 
 	self._grow = false
 end
@@ -57,18 +57,23 @@ function Control:setMinSize(size, y)
 end
 
 function Control:setTheme(theme)
-	if theme.background then
-		self._bgColor = theme.background
-	end
-
+	self._theme = theme
 	return self
+end
+
+function Control:getTheme()
+	return self._theme
+end
+
+function Control:_backgroundTheme()
+	return self:getTheme().background or { 0, 0, 0, 0 }
 end
 
 function Control:draw()
 	local pos = self:getTopLeftCorner()
 	local size = self:getSize()
 
-	self:drawInColor(self._bgColor, function()
+	self:drawInColor(self:_backgroundTheme(), function()
 		love.graphics.rectangle("fill", pos.x, pos.y, size.x, size.y)
 	end)
 
