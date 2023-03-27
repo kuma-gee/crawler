@@ -8,6 +8,17 @@ function Control:new(anchor)
 	self._minSize = Vector(0, 0)
 	self._logger = Logger.new('Control')
 	self._bgColor = { 0, 0, 0, 0 }
+
+	self._grow = false
+end
+
+function Control:isGrow()
+	return self._grow
+end
+
+function Control:setGrow(grow)
+	self._grow = grow
+	return self
 end
 
 function Control:getTopLeftCorner()

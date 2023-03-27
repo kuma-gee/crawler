@@ -7,7 +7,6 @@ local Map = require 'src.map'
 
 local MainContainer = Container:extend()
 
-
 local textTheme = { color = { 1, 1, 1, 1 } }
 local health = Label():setTheme(textTheme)
 local inventory = Container(Vector.DOWN):setTheme({ 0, 0.5, 0, 0.5 })
@@ -18,7 +17,7 @@ local statusContainer = Container(Vector.DOWN)
 
 local actionsContainer = Container(Vector.RIGHT)
 
-local eventText = Label("Event here"):setTheme(textTheme)
+local eventText = Label():setTheme(textTheme)
 local mainTextContainer = Container(Vector.DOWN)
 	:setTheme({ background = { 0.5, 0.5, 0, 0.5 } })
 	:addChild(eventText)
@@ -42,7 +41,7 @@ function MainContainer:new(dungeon, player)
 
 	self:addChild(
 		statusContainer:setMinSize(Unit.w(0.2), Unit.w(0.1)),
-		mainTextContainer:setMinSize(Unit.w(0.7), Unit.w(0.1)),
+		mainTextContainer:setGrow(true),
 		Map(dungeon):setMinSize(Unit.w(0.1), Unit.w(0.1))
 	)
 end
