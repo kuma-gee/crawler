@@ -3,39 +3,40 @@ local Label = Control:extend()
 
 function Label:new(t)
 	Label.super.new(self)
-	self._text = t or ''
+	self:setText(t or '')
 	self._textColor = { 0, 0, 0, 1 }
+end
+
+function Label:load()
+	self:_updateSizeForText()
+end
+
+function Label:getText()
+	return self._text
 end
 
 function Label:setText(t)
 	self._text = tostring(t)
-	self:setSize(Vector.ZERO) -- allow size to shrink
-end
-
-function Label:update(_)
-	Label.super.update(self, _)
+	self:setMinSize(Vector.ZERO) -- allow size to shrink
 	self:_updateSizeForText()
 end
 
 function Label:_updateSizeForText()
 	local font = love.graphics.getFont()
-	local size = self:getSize()
+	local size = self:getMinSize()
 
-	self:setSize(Vector(
-		math.max(font:getWidth(self._text), size.x),
-		math.max(font:getHeight(), size.y)
-	))
+	self:setMinSize(size:maximize(Vector(font:getWidth(self._text), font:getHeight())))
 end
 
 function Label:draw()
+	Label.super.draw(self)
+
 	local pos = self:getPosition()
 	local size = self:getSize()
 
 	self:drawInColor(self._textColor, function()
 		love.graphics.printf(self._text, pos.x, pos.y, size.x, "left")
 	end)
-
-	Label.super.draw(self)
 end
 
 function Label:setTheme(theme)
@@ -44,6 +45,10 @@ function Label:setTheme(theme)
 	end
 
 	return Label.super.setTheme(self, theme)
+end
+
+function Label:__tostring()
+	return 'Label(text="' .. self:getText() .. '")'
 end
 
 return Label

@@ -27,11 +27,12 @@ function Control:getTopLeftCorner()
 	return center - (size / 2)
 end
 
+function Control:getMinSize()
+	return self._minSize
+end
+
 function Control:getSize()
-	return Vector(
-		math.max(self._minSize.x, self._size.x),
-		math.max(self._minSize.y, self._size.y)
-	)
+	return self:getMinSize():maximize(self._size)
 end
 
 function Control:setSize(size, y)
@@ -90,6 +91,10 @@ function Control:drawInColor(col, fn)
 	love.graphics.setColor(c[1], c[2], c[3], c[4])
 	fn()
 	love.graphics.setColor(r, g, b, a)
+end
+
+function Control:__tostring()
+	return 'Control()'
 end
 
 return Control

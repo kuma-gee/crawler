@@ -147,4 +147,8 @@ function Container:setTheme(theme)
 	return Container.super.setTheme(self, theme)
 end
 
+function Container:__tostring()
+	return 'Container(dir=' .. tostring(self._dir) .. ',#children=' .. #self:getChildren() .. ')'
+end
+
 return Container

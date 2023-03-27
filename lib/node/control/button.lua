@@ -60,4 +60,8 @@ function Button:setHoverTheme(theme)
 	return self
 end
 
+function Button:__tostring()
+	return 'Button()'
+end
+
 return Button

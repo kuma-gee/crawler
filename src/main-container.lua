@@ -41,8 +41,11 @@ function MainContainer:new(dungeon, player)
 
 	self:addChild(
 		statusContainer:setMinSize(Unit.w(0.2), Unit.w(0.1)),
+
 		mainTextContainer:setGrow(true),
+
 		Map(dungeon):setMinSize(Unit.w(0.1), Unit.w(0.1))
+		:setTheme({ background = { 0.5, 0.5, 0.5, 0.5 } })
 	)
 end
 
@@ -68,17 +71,17 @@ end
 function MainContainer:showLootEvent(loot)
 	eventText:setText('You found a ' .. loot .. '.')
 
-	local pickupBtn = Button()
-		:addChild(Label('Pickup'):setTheme(textTheme))
-		:setTheme({ background = { 1, 1, 0, 0.5 } })
-		:setHoverTheme({ background = { 0, 1, 0, 0.5 } })
-	pickupBtn.onClick:register(function()
-		self.onItemPickup:emit(loot)
-		eventText:setText('You picked up a ' .. loot .. '.')
-		actionsContainer:clearChildren()
-	end)
+	-- local pickupBtn = Button()
+	-- 	:addChild(Label('Pickup'):setTheme(textTheme))
+	-- 	:setTheme({ background = { 1, 1, 0, 0.5 } })
+	-- 	:setHoverTheme({ background = { 0, 1, 0, 0.5 } })
+	-- pickupBtn.onClick:register(function()
+	-- 	self.onItemPickup:emit(loot)
+	-- 	eventText:setText('You picked up a ' .. loot .. '.')
+	-- 	actionsContainer:clearChildren()
+	-- end)
 
-	actionsContainer:addChild(pickupBtn)
+	-- actionsContainer:addChild(pickupBtn)
 end
 
 return MainContainer

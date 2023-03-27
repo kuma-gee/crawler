@@ -268,6 +268,13 @@ function vector:trimmed(maxLen)
 	return self:clone():trimInplace(maxLen)
 end
 
+function vector:maximize(v)
+	return Vector(
+		math.max(self.x, v.x),
+		math.max(self.y, v.y)
+	)
+end
+
 -- the module
 return setmetatable({
 	new             = new,
