@@ -1,14 +1,14 @@
 local Control = require 'lib.node.control'
 local Container = Control:extend()
 
-local Align = { Start = 'start', Center = 'center', End = 'end', Stretch = 'stretch' }
+Container.Align = { Start = 'start', Center = 'center', End = 'end', Stretch = 'stretch' }
 
-function Container:new(dir, anchor)
+function Container:new(dir, anchor, align)
 	Container.super.new(self, anchor)
 	-- self._pad = { 0, 0, 0, 0 }
-	self._dir = dir or Vector.DOWN
+	self._dir = (dir or Vector.DOWN):abs():normalizedInGrid()
 	self._logger = Logger.new('Container')
-	self._align = Align.Start
+	self._align = align or Container.Align.Start
 end
 
 -- function Container:_getTopPadding()
@@ -71,11 +71,29 @@ end
 function Container:update(_)
 	self:_updateSize()
 
-	local currPos = self:_getInnerTopLeftCorner()
+	local currPos = self:getTopLeftCorner()
+
 	self:eachVisibleChild(function(child)
-		child:setPosition(currPos:clone())
+		child:setPosition(self:_getPositionForAlignment(currPos, child))
 		currPos = currPos + child:getSize():multiply(self._dir)
 	end)
+end
+
+function Container:_getPositionForAlignment(pos, child)
+	local dir = self:_normalDir()
+	if self._align == Container.Align.Center then
+		local center = pos + self:getSize():multiply(dir / 2)
+		return center - child:getSize():multiply(dir / 2)
+	elseif self._align == Container.Align.End then
+		local endPos = pos + self:getSize():multiply(dir)
+		return endPos - child:getSize():multiply(dir)
+	end
+
+	return pos:clone()
+end
+
+function Container:_normalDir()
+	return self._dir:perpendicular():abs()
 end
 
 function Container:_updateSize()
@@ -85,7 +103,7 @@ function Container:_updateSize()
 		child:update()
 
 		local childSize = child:getSize()
-		childrenSize = childrenSize + childSize:multiply(self._dir:abs())
+		childrenSize = childrenSize + childSize:multiply(self._dir)
 
 		if self._dir * Vector.UP == 0 then
 			childrenSize.y = math.max(childrenSize.y, childSize.y)
@@ -98,6 +116,13 @@ function Container:_updateSize()
 		end
 	end)
 
+	if self._align == Container.Align.Stretch then
+		self:eachVisibleChild(function(child)
+			local size = child:getSize():multiply(self._dir)
+			child:setSize(size + self:_normalDir():multiply(childrenSize))
+		end)
+	end
+
 	local containerSize = self:getSize():multiply(self._dir)
 	local currentSize = childrenSize:multiply(self._dir)
 
@@ -105,7 +130,7 @@ function Container:_updateSize()
 		local remainingSpace = containerSize:len() - currentSize:len()
 		local size = remainingSpace / #growChildren
 		for _, child in ipairs(growChildren) do
-			local childSizeWithoutDirSize = child:getSize():multiply(self._dir:perpendicular():abs())
+			local childSizeWithoutDirSize = child:getSize():multiply(self:_normalDir())
 			child:setSize(childSizeWithoutDirSize + self._dir * size)
 		end
 	end

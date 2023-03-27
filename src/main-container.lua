@@ -7,7 +7,7 @@ local Map = require 'src.map'
 
 local MainContainer = Container:extend()
 
-local textTheme = { color = { 1, 1, 1, 1 } }
+local textTheme = { color = { 1, 1, 1, 1 }, background = { 1, 0, 0, 0.5 } }
 local health = Label():setTheme(textTheme)
 local inventory = Container(Vector.DOWN):setTheme({ 0, 0.5, 0, 0.5 })
 local statusContainer = Container(Vector.DOWN)
@@ -24,7 +24,7 @@ local mainTextContainer = Container(Vector.DOWN)
 	:addChild(actionsContainer)
 
 function MainContainer:new(dungeon, player)
-	MainContainer.super.new(self, Vector.RIGHT, Vector.BOT_LEFT)
+	MainContainer.super.new(self, Vector.RIGHT, Vector.BOT_LEFT, Container.Align.Center)
 	self:setTheme({ background = { 0.5, 0, 0, 0.7 } })
 
 	self.onItemPickup = Signal()
