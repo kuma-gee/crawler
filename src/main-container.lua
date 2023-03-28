@@ -28,6 +28,7 @@ function MainContainer:new(dungeon, player)
 	self:setTheme({ background = { 0.5, 0, 0, 0.5 } })
 
 	self.onItemPickup = Signal()
+	self.onAttack = Signal()
 
 	player.onHealthChange:register(function(hp, max_hp)
 		health:setText('HP: ' .. hp .. ' / ' .. max_hp)
@@ -64,24 +65,38 @@ function MainContainer:showNoEvents()
 	actionsContainer:clearChildren()
 end
 
-function MainContainer:showEnemyEvent(enemy)
-	eventText:setText('You encounter a ' .. enemy .. '. What do you do?')
+function MainContainer:showEnemyEvent(enemy, has_weapon)
+	eventText:setText('You encounter a ' .. enemy .. '.')
+
+	if has_weapon then
+		local attackBtn = Button()
+			:addChild(Label('Attack'):setTheme(textTheme))
+			:setTheme({ background = { 1, 1, 0, 0.5 } })
+			:setHoverTheme({ background = { 0, 1, 0, 0.5 } })
+		attackBtn.onClick:register(function()
+			self.onAttack:emit()
+			eventText:setText('You attack the ' .. enemy .. '.')
+			actionsContainer:clearChildren()
+		end)
+
+		actionsContainer:addChild(attackBtn)
+	end
 end
 
 function MainContainer:showLootEvent(loot)
 	eventText:setText('You found a ' .. loot .. '.')
 
-	-- local pickupBtn = Button()
-	-- 	:addChild(Label('Pickup'):setTheme(textTheme))
-	-- 	:setTheme({ background = { 1, 1, 0, 0.5 } })
-	-- 	:setHoverTheme({ background = { 0, 1, 0, 0.5 } })
-	-- pickupBtn.onClick:register(function()
-	-- 	self.onItemPickup:emit(loot)
-	-- 	eventText:setText('You picked up a ' .. loot .. '.')
-	-- 	actionsContainer:clearChildren()
-	-- end)
+	local pickupBtn = Button()
+		:addChild(Label('Pickup'):setTheme(textTheme))
+		:setTheme({ background = { 1, 1, 0, 0.5 } })
+		:setHoverTheme({ background = { 0, 1, 0, 0.5 } })
+	pickupBtn.onClick:register(function()
+		self.onItemPickup:emit(loot)
+		eventText:setText('You picked up a ' .. loot .. '.')
+		actionsContainer:clearChildren()
+	end)
 
-	-- actionsContainer:addChild(pickupBtn)
+	actionsContainer:addChild(pickupBtn)
 end
 
 return MainContainer

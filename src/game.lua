@@ -7,8 +7,9 @@ local Node = require 'lib.node'
 local Game = Node:extend()
 
 Events = { Enemy = 'enemy', NPC = 'npc', Loot = 'loot', Exit = 'exit', Nothing = 'nothing' }
-Loot = { Torch = 'torch', Sword = 'sword', Armor = 'armor', Knife = 'knife', Stone = 'stone' }
 Enemy = { Bat = 'bat', Goblin = 'goblin', Skeleton = 'skeleton' }
+Weapon = { Sword = 'sword', Knife = 'Knife', Stone = 'stone' }
+Loot = { Torch = 'torch', Armor = 'armor', unpack(Weapon) }
 
 local foundExit = false
 local spawnedTorch = false
@@ -28,8 +29,8 @@ local loot_values = {
 }
 
 local enemy_values = {
-	{ Enemy.Bat, 100 },
-	{ Enemy.Goblin, 20 },
+	{ Enemy.Bat,      100 },
+	{ Enemy.Goblin,   20 },
 	{ Enemy.Skeleton, 100 },
 }
 
@@ -38,12 +39,11 @@ local function _randomItem(items)
 
 	for _, v in pairs(items) do
 		if rand <= v[2] then
-
 			return v[1]
 		end
 	end
 
-	return Loot.Stone
+	return nil
 end
 
 local function _totalEventValue()
@@ -113,7 +113,7 @@ end
 function Game:_showRoomEvent(room)
 	local event_fn = {
 		[Events.Loot] = function(loot) self.ui:showLootEvent(loot) end,
-		[Events.Enemy] = function(enemy) self.ui:showEnemyEvent(enemy) end,
+		[Events.Enemy] = function(enemy) self.ui:showEnemyEvent(enemy, self.player:hasWeapon()) end,
 	}
 
 	local ev = room:getEvent()
@@ -129,14 +129,14 @@ function Game:_setNewRoomEvent(room)
 
 	local item = nil
 	if ev == Events.Loot then
-		item = _randomItem(loot_values)
+		item = _randomItem(loot_values) or Weapon.Stone
 		if item == Loot.Torch then
 			table.remove(loot_values, 1)
 			spawnedTorch = true
 		end
 	end
 	if ev == Events.Enemy then
-		item = _randomItem(enemy_values)
+		item = _randomItem(enemy_values) or Enemy.Bat
 	end
 	room:setEvent(ev, item)
 	self:_showRoomEvent(room)
@@ -158,6 +158,9 @@ function Game:new()
 	self.ui.onItemPickup:register(function(loot)
 		self.player:addItem(loot)
 		self.dungeon:activeRoom():removeEvent()
+	end)
+	self.ui.onAttack:register(function()
+
 	end)
 	self.dungeon.onNewRoom:register(function(room) self:_setNewRoomEvent(room) end)
 	self.dungeon.onRoomEnter:register(function(room) self:_showRoomEvent(room) end)

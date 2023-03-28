@@ -41,4 +41,14 @@ function Player:addItem(item)
 	self.onInventoryChange:emit(self._inventory)
 end
 
+function Player:hasWeapon()
+	for _, v in ipairs(self._inventory) do
+		if table.contains(Weapon, v) then
+			return true
+		end
+	end
+
+	return false
+end
+
 return Player
