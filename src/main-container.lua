@@ -24,8 +24,8 @@ local mainTextContainer = Container(Vector.DOWN)
 	:addChild(actionsContainer)
 
 function MainContainer:new(dungeon, player)
-	MainContainer.super.new(self, Vector.RIGHT, Vector.BOT_LEFT, Container.Align.Center)
-	self:setTheme({ background = { 0.5, 0, 0, 0.7 } })
+	MainContainer.super.new(self, Vector.RIGHT, Vector.BOT_LEFT, Container.Align.Stretch)
+	self:setTheme({ background = { 0.5, 0, 0, 0.5 } })
 
 	self.onItemPickup = Signal()
 
@@ -40,12 +40,12 @@ function MainContainer:new(dungeon, player)
 	end)
 
 	self:addChild(
-		statusContainer:setMinSize(Unit.w(0.2), Unit.w(0.1)),
+		statusContainer:setMinSize(Unit.w(0.2), 0),
 
 		mainTextContainer:setGrow(true),
 
 		Map(dungeon):setMinSize(Unit.w(0.1), Unit.w(0.1))
-		:setTheme({ background = { 0.5, 0.5, 0.5, 0.5 } })
+		:setTheme({ background = { 0, 0, 0.5, 0.5 } })
 	)
 end
 

@@ -126,12 +126,14 @@ function Container:_updateSize()
 	local containerSize = self:getSize():multiply(self._dir)
 	local currentSize = childrenSize:multiply(self._dir)
 
+
 	if containerSize:len() > currentSize:len() and #growChildren > 0 then
 		local remainingSpace = containerSize:len() - currentSize:len()
 		local size = remainingSpace / #growChildren
+
 		for _, child in ipairs(growChildren) do
-			local childSizeWithoutDirSize = child:getSize():multiply(self:_normalDir())
-			child:setSize(childSizeWithoutDirSize + self._dir * size)
+			local remainingChildSize = child:getSize():multiply(self:_normalDir())
+			child:setSize(child:getSize() + remainingChildSize + self._dir * size)
 		end
 	end
 
