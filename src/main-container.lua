@@ -24,7 +24,7 @@ local mainTextContainer = Container(Vector.DOWN)
 	:addChild(actionsContainer)
 
 function MainContainer:new(dungeon, player)
-	MainContainer.super.new(self, Vector.RIGHT, Vector.BOT_LEFT, Container.Align.Stretch)
+	MainContainer.super.new(self, Vector.RIGHT, Vector.DOWN, Container.Align.Stretch)
 	self:setTheme({ background = { 0.5, 0, 0, 0.5 } })
 
 	self.onItemPickup = Signal()
@@ -53,7 +53,7 @@ function MainContainer:input(ev)
 	if ev:is(ResizeEvent) then
 		local x, y = ev:getSize()
 		self:setMinSize(Vector(x, 0))
-		self:setPosition(Vector(0, y))
+		self:setPosition(Vector(x / 2, y))
 	end
 
 	MainContainer.super.input(self, ev)
