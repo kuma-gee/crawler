@@ -1,10 +1,14 @@
 local Input = require 'lib.input'
 local Game = require 'src.game'
+local Timer = require 'lib.timer'
+
+love.graphics.setDefaultFilter('nearest', 'nearest')
+love.graphics.setLineStyle('rough')
 
 local push = require 'lib.push'
-local gameWidth, gameHeight = 1920, 1080
+local gameWidth, gameHeight = 1920 / 2, 1080 / 2
 local windowWidth, windowHeight = love.window.getDesktopDimensions()
-push:setupScreen(gameWidth, gameHeight, windowWidth / 2, windowHeight / 2, { fullscreen = false, resizable = true })
+push:setupScreen(gameWidth, gameHeight, windowWidth / 2, windowHeight / 2, { fullscreen = false, resizable = true, stencil = false })
 Unit.setScreenSize(gameWidth, gameHeight)
 Logger.setLoggingLevel(Logger.Level.DEBUG)
 
@@ -12,7 +16,7 @@ Logger.setLoggingLevel(Logger.Level.DEBUG)
 local root = Game()
 
 function love.load()
-    love.graphics.setNewFont(24)
+    love.graphics.setNewFont('jackeyfont.ttf', 12)
     -- math.randomseed(os.time())
 
     Input.onInput:register(function(ev) root:input(ev) end)
@@ -29,6 +33,7 @@ end
 
 function love.update(dt)
     root:update(dt)
+    Timer.update(dt)
 end
 
 -- Register Inputs

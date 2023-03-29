@@ -1,15 +1,23 @@
 local Enemy = Class:extend()
 
+local Types = { Bat = 'bat', Goblin = 'goblin', Skeleton = 'skeleton' }
+
 local enemy_dmg = {
-	[Enemy.Bat] = 1,
-	[Enemy.Goblin] = 4,
-	[Enemy.Skeleton] = 2
+	[Types.Bat] = 1,
+	[Types.Goblin] = 4,
+	[Types.Skeleton] = 2
 }
 
 local enemy_health = {
-	[Enemy.Bat] = 3,
-	[Enemy.Goblin] = 8,
-	[Enemy.Skeleton] = 5
+	[Types.Bat] = 3,
+	[Types.Goblin] = 8,
+	[Types.Skeleton] = 5
+}
+
+local enemy_values = {
+	{ Types.Bat, 0 },
+	{ Types.Goblin, 20 },
+	{ Types.Skeleton, 50 },
 }
 
 function Enemy:new(type)
@@ -36,6 +44,24 @@ function Enemy:isDead()
 end
 
 function Enemy:getType()
+	return self._type
+end
+
+function Enemy.randomEnemy()
+	local type = Enemy._randomType()
+	return type, Enemy(type)
+end
+
+function Enemy._randomType()
+	local rand = math.random(0, 100)
+
+	for _, v in pairs(enemy_values) do
+		if rand <= v[2] then
+			return v[1]
+		end
+	end
+
+	return enemy_values[1][1]
 end
 
 return Enemy

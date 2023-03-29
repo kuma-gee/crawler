@@ -7,13 +7,13 @@ local Timer = require 'lib.timer'
 local Node = require 'lib.node'
 local Game = Node:extend()
 
+local foundExit = false
+local spawnedTorch = false
+
 Events = { Enemy = 'enemy', NPC = 'npc', Loot = 'loot', Exit = 'exit', Nothing = 'nothing' }
-Enemy = { Bat = 'bat', Goblin = 'goblin', Skeleton = 'skeleton' }
 Weapon = { Sword = 'sword', Knife = 'Knife', Stone = 'stone' }
 Loot = { Torch = 'torch', Armor = 'armor', unpack(Weapon) }
 
-local foundExit = false
-local spawnedTorch = false
 
 local weapon_dmg = {
 	[Weapon.Sword] = 6,
@@ -33,12 +33,6 @@ local loot_values = {
 	{ Loot.Knife, 20 },
 	{ Loot.Armor, 40 },
 	{ Loot.Sword, 50 },
-}
-
-local enemy_values = {
-	{ Enemy.Bat,      100 },
-	{ Enemy.Goblin,   20 },
-	{ Enemy.Skeleton, 100 },
 }
 
 local function _randomItem(items)
@@ -143,8 +137,9 @@ function Game:_setNewRoomEvent(room)
 		end
 	end
 	if ev == Events.Enemy then
-		item = _randomItem(enemy_values) or Enemy.Bat
-		room:setEnemy(Enemy(item))
+		local x, y = Enemy.randomEnemy()
+		item = x
+		room:setEnemy(y)
 	end
 	room:setEvent(ev, item)
 	self:_showRoomEvent(room)
@@ -176,7 +171,7 @@ function Game:new()
 			if enemy ~= nil then
 				local dmg = weapon_dmg[weapon]
 				enemy:hurt(dmg)
-				self.ui:appendEventText('You deal' .. dmg .. ' damage.')
+				self.ui:appendEventText('You deal ' .. dmg .. ' damage.')
 				wait(1)
 
 				if enemy:isDead() then
@@ -187,7 +182,7 @@ function Game:new()
 				else
 					local enemy_dmg = enemy:getAttack()
 					self.player:hurt(enemy_dmg) -- TODO: reduce based on armor
-					self.ui:setEventText('The ' .. enemy .. ' attacks you and deals ' .. enemy_dmg .. ' damage.')
+					self.ui:setEventText('The ' .. enemy:getType() .. ' attacks you and deals ' .. enemy_dmg .. ' damage.')
 				end
 
 				wait(1)

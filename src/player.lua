@@ -8,7 +8,7 @@ function Player:new()
 	self.onHealthChange = Signal()
 	self.onInventoryChange = Signal()
 
-	self._max_health = 5
+	self._max_health = 10
 	self._health = self._max_health
 	self._inventory = {}
 end
