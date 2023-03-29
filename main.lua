@@ -11,10 +11,11 @@ function love.load()
     love.graphics.setNewFont('jackeyfont.ttf', 12)
     -- math.randomseed(os.time())
 
+    root:load()
+
     Input.onInput:register(function(ev) root:input(ev) end)
     Input:load()
 
-    root:load()
 end
 
 function love.draw()

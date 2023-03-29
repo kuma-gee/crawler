@@ -19,11 +19,11 @@ local function setScreenSize(w, h)
 end
 
 local function fromWidth(v)
-	return getWidth() * v
+	return width * v
 end
 
 local function fromHeight(v)
-	return getHeight() * v
+	return height * v
 end
 
 local function fromFont(v)

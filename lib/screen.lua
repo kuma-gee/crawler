@@ -6,27 +6,17 @@ local Screen = Node2D:extend()
 
 function Screen:new(w, h, pixel)
 	Screen.super.new(self)
-	self._canvas = love.graphics.newCanvas(w, h)
 
 	if pixel then
 		love.graphics.setDefaultFilter("nearest", "nearest")
 		love.graphics.setLineStyle("rough")
 	end
-end
 
-function Screen:_w()
-	return self._canvas:getWidth()
-end
-
-function Screen:_h()
-	return self._canvas:getHeight()
-end
-
-function Screen:load()
-	local w, h = self._canvas:getDimensions()
 	Unit.setScreenSize(w, h)
-	love.window.setMode(w, h, {})
+	self._canvas = love.graphics.newCanvas(w, h)
 	self:_updateScale()
+	love.window.setMode(w, h, {})
+
 end
 
 function Screen:draw()
