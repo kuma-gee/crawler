@@ -17,7 +17,23 @@ function Player:load()
 	self.onHealthChange:emit(self._health, self._max_health)
 end
 
+function Player:hurt(dmg)
+	self._health = self._health - dmg
+end
+
+function Player:disableInput()
+	self._disableInput = true
+end
+
+function Player:enableInput()
+	self._disableInput = false
+end
+
 function Player:input(ev)
+	if self._disableInput then
+		return
+	end
+
 	if ev:is(KeyEvent) and ev:isPressed() then
 		local key = ev:getKey()
 		if key == "up" then
@@ -41,14 +57,15 @@ function Player:addItem(item)
 	self.onInventoryChange:emit(self._inventory)
 end
 
-function Player:hasWeapon()
+function Player:getWeapons()
+	local weapons = {}
 	for _, v in ipairs(self._inventory) do
 		if table.contains(Weapon, v) then
-			return true
+			table.insert(weapons, v)
 		end
 	end
 
-	return false
+	return weapons
 end
 
 return Player

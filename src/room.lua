@@ -58,6 +58,14 @@ function Room:setEvent(ev, item)
 	self._event = { ev, item }
 end
 
+function Room:setEnemy(enemy)
+	self._enemy = enemy
+end
+
+function Room:getEnemy(enemy)
+	return self._enemy
+end
+
 function Room:getEvent()
 	return self._event
 end

@@ -1,7 +1,8 @@
 local Player = require "src.player"
 local Dungeon = require 'src.dungeon'
 local MainContainer = require 'src.main-container'
-
+local Enemy = require 'src.enemy'
+local Timer = require 'lib.timer'
 
 local Node = require 'lib.node'
 local Game = Node:extend()
@@ -13,6 +14,12 @@ Loot = { Torch = 'torch', Armor = 'armor', unpack(Weapon) }
 
 local foundExit = false
 local spawnedTorch = false
+
+local weapon_dmg = {
+	[Weapon.Sword] = 6,
+	[Weapon.Knife] = 3,
+	[Weapon.Stone] = 1,
+}
 
 local event_values = {
 	[Events.Enemy] = 0,
@@ -110,10 +117,10 @@ function Game:_updateEventChances(ev)
 	end
 end
 
-function Game:_showRoomEvent(room)
+function Game:_showRoomEvent(room, continue)
 	local event_fn = {
 		[Events.Loot] = function(loot) self.ui:showLootEvent(loot) end,
-		[Events.Enemy] = function(enemy) self.ui:showEnemyEvent(enemy, self.player:hasWeapon()) end,
+		[Events.Enemy] = function(enemy) self.ui:showEnemyEvent(enemy, self.player:getWeapons(), continue) end,
 	}
 
 	local ev = room:getEvent()
@@ -137,6 +144,7 @@ function Game:_setNewRoomEvent(room)
 	end
 	if ev == Events.Enemy then
 		item = _randomItem(enemy_values) or Enemy.Bat
+		room:setEnemy(Enemy(item))
 	end
 	room:setEvent(ev, item)
 	self:_showRoomEvent(room)
@@ -159,8 +167,35 @@ function Game:new()
 		self.player:addItem(loot)
 		self.dungeon:activeRoom():removeEvent()
 	end)
-	self.ui.onAttack:register(function()
+	self.ui.onAttack:register(function(weapon)
+		self.player:disableInput()
+		Timer.script(function(wait)
+			wait(1)
 
+			local enemy = self.dungeon:activeRoom():getEnemy()
+			if enemy ~= nil then
+				local dmg = weapon_dmg[weapon]
+				enemy:hurt(dmg)
+				self.ui:appendEventText('You deal' .. dmg .. ' damage.')
+				wait(1)
+
+				if enemy:isDead() then
+					self.ui:setEventText('You killed the ' .. enemy:getType() .. '.')
+					self.dungeon:activeRoom():removeEvent()
+
+					-- TODO: get loot?
+				else
+					local enemy_dmg = enemy:getAttack()
+					self.player:hurt(enemy_dmg) -- TODO: reduce based on armor
+					self.ui:setEventText('The ' .. enemy .. ' attacks you and deals ' .. enemy_dmg .. ' damage.')
+				end
+
+				wait(1)
+				self:_showRoomEvent(self.dungeon:activeRoom(), true)
+
+				self.player:enableInput()
+			end
+		end)
 	end)
 	self.dungeon.onNewRoom:register(function(room) self:_setNewRoomEvent(room) end)
 	self.dungeon.onRoomEnter:register(function(room) self:_showRoomEvent(room) end)

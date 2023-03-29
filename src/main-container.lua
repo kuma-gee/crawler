@@ -65,22 +65,32 @@ function MainContainer:showNoEvents()
 	actionsContainer:clearChildren()
 end
 
-function MainContainer:showEnemyEvent(enemy, has_weapon)
-	eventText:setText('You encounter a ' .. enemy .. '.')
+function MainContainer:showEnemyEvent(enemy, weapons, continue)
+	if continue == nil then
+		eventText:setText('You encounter a ' .. enemy .. '.')
+	end
 
-	if has_weapon then
+	for _, weapon in ipairs(weapons) do
 		local attackBtn = Button()
-			:addChild(Label('Attack'):setTheme(textTheme))
+			:addChild(Label(weapon):setTheme(textTheme))
 			:setTheme({ background = { 1, 1, 0, 0.5 } })
 			:setHoverTheme({ background = { 0, 1, 0, 0.5 } })
 		attackBtn.onClick:register(function()
-			self.onAttack:emit()
-			eventText:setText('You attack the ' .. enemy .. '.')
+			self.onAttack:emit(weapon)
+			eventText:setText('You attack the ' .. enemy .. ' with a ' .. weapon .. '.')
 			actionsContainer:clearChildren()
 		end)
 
 		actionsContainer:addChild(attackBtn)
 	end
+end
+
+function MainContainer:appendEventText(txt)
+	eventText:setText(eventText:getText() .. txt)
+end
+
+function MainContainer:setEventText(txt)
+	eventText:setText(txt)
 end
 
 function MainContainer:showLootEvent(loot)
