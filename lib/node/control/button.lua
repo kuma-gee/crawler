@@ -1,5 +1,5 @@
 local MouseButtonEvent = require 'lib.input.mouse-button-event'
-local MouseMoveEvent = require 'lib.input.mouse-move-event'
+local MouseEvent = require 'lib.input.mouse-event'
 local Container = require 'lib.node.control.container'
 local Button = Container:extend()
 
@@ -24,7 +24,7 @@ end
 
 function Button:_updateHover(ev)
 	local mouse = ev:getPosition()
-	local topLeft = self:getPosition()
+	local topLeft = Vector(self:getPosition())
 	local botRight = topLeft + self:getSize()
 
 	local insideX = mouse.x > topLeft.x and mouse.x < botRight.x
@@ -41,7 +41,7 @@ function Button:getTheme()
 end
 
 function Button:input(event)
-	if event:is(MouseMoveEvent) then
+	if event:is(MouseEvent) then
 		self:_updateHover(event)
 	end
 
