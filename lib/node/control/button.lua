@@ -23,12 +23,12 @@ function Button:isPressed()
 end
 
 function Button:_updateHover(ev)
-	local mouse = ev:getPosition()
-	local topLeft = Vector(self:getPosition())
+	local mx, my = ev:getPosition()
+	local topLeft = self:getPosition()
 	local botRight = topLeft + self:getSize()
 
-	local insideX = mouse.x > topLeft.x and mouse.x < botRight.x
-	local insideY = mouse.y > topLeft.y and mouse.y < botRight.y
+	local insideX = mx > topLeft.x and mx < botRight.x
+	local insideY = my > topLeft.y and my < botRight.y
 	self._isHover = insideX and insideY
 end
 

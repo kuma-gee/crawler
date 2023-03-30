@@ -14,11 +14,16 @@ function Player:new()
 end
 
 function Player:load()
-	self.onHealthChange:emit(self._health, self._max_health)
+	self:_emitCurrentHealth()
 end
 
 function Player:hurt(dmg)
 	self._health = self._health - dmg
+	self:_emitCurrentHealth()
+end
+
+function Player:_emitCurrentHealth()
+	self.onHealthChange:emit(self._health, self._max_health)
 end
 
 function Player:disableInput()
