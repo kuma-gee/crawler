@@ -1,7 +1,18 @@
-local MouseButtonEvent = require 'lib.input.mouse-button-event'
-local MouseEvent = require 'lib.input.mouse-event'
-local Container = require 'lib.node.control.container'
-local Button = Container:extend()
+local MouseButtonEvent  = require 'lib.input.mouse-button-event'
+local MouseEvent        = require 'lib.input.mouse-event'
+local Container         = require 'lib.node.control.container'
+local Button            = Container:extend()
+
+local defaultTheme      = { background = { 0, 0, 0, 0 } }
+local hoverDefaultTheme = { background = { 1, 1, 1, 0.2 } }
+
+function Button.setDefaultTheme(theme)
+	defaultTheme = table.merge(defaultTheme, theme)
+end
+
+function Button.setDefaultHoverTheme(theme)
+	hoverDefaultTheme = table.merge(hoverDefaultTheme, theme)
+end
 
 function Button:new()
 	Button.super.new(self, Vector.RIGHT)
@@ -11,7 +22,9 @@ function Button:new()
 	self._isHover = false
 	self._isPressed = false
 	self._logger = Logger.new('Button')
-	self._hoverTheme = {}
+
+	self._hoverTheme = hoverDefaultTheme
+	self:setTheme(defaultTheme)
 end
 
 function Button:isHover()
@@ -56,7 +69,7 @@ function Button:input(event)
 end
 
 function Button:setHoverTheme(theme)
-	self._hoverTheme = theme
+	self._hoverTheme = table.merge(self._hoverTheme, theme)
 	return self
 end
 

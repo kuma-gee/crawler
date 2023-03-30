@@ -7,21 +7,17 @@ local Map = require 'src.map'
 
 local MainContainer = Container:extend()
 
-local textTheme = { color = { 1, 1, 1, 1 }, background = { 1, 0, 0, 0.5 } }
-local health = Label():setTheme(textTheme)
+local health = Label()
 local inventory = Container(Vector.DOWN):setTheme({ 0, 0.5, 0, 0.5 })
+local inventoryAction = Container(Vector.DOWN):setTheme({ 0, 0.5, 0, 0.5 })
 local statusContainer = Container(Vector.DOWN)
 	:setTheme({ background = { 0, 0.5, 0, 0.5 } })
 	:addChild(health)
 	:addChild(inventory)
+	:addChild(inventoryAction)
 
-local actionsContainer = Container(Vector.RIGHT)
-
-local eventText = Label():setTheme(textTheme)
-local mainTextContainer = Container(Vector.DOWN)
+local mainTextContainer = Container(Vector.RIGHT)
 	:setTheme({ background = { 0.5, 0.5, 0, 0.5 } })
-	:addChild(eventText)
-	:addChild(actionsContainer)
 
 function MainContainer:new(dungeon, player)
 	MainContainer.super.new(self, Vector.RIGHT, Vector.DOWN, Container.Align.Stretch)
@@ -35,8 +31,14 @@ function MainContainer:new(dungeon, player)
 	end)
 	player.onInventoryChange:register(function(items)
 		inventory:clearChildren()
+		inventoryAction:clearChildren()
+
 		for _, item in ipairs(items) do
-			inventory:addChild(Label(item):setTheme(textTheme))
+			inventory:addChild(Label(item:getType()))
+
+			local btn = Button():addChild(Label(item:getType()))
+			btn.onClick:register(function() self.onAttack:emit(item) end)
+			inventoryAction:addChild(btn)
 		end
 	end)
 
@@ -61,52 +63,55 @@ function MainContainer:input(ev)
 end
 
 function MainContainer:showNoEvents()
-	eventText:setText("")
-	actionsContainer:clearChildren()
+	mainTextContainer:clearChildren()
 end
 
-function MainContainer:showEnemyEvent(enemy, weapons, continue)
-	if continue == nil then
-		eventText:setText('You encounter a ' .. enemy .. '.')
-	end
-
-	for _, weapon in ipairs(weapons) do
-		local attackBtn = Button()
-			:addChild(Label(weapon):setTheme(textTheme))
-			:setTheme({ background = { 1, 1, 0, 0.5 } })
-			:setHoverTheme({ background = { 0, 1, 0, 0.5 } })
-		attackBtn.onClick:register(function()
-			self.onAttack:emit(weapon)
-			eventText:setText('You attack the ' .. enemy .. ' with a ' .. weapon .. '.')
-			actionsContainer:clearChildren()
-		end)
-
-		actionsContainer:addChild(attackBtn)
+function MainContainer:showInventoryActions(show)
+	if show then
+		inventory:hide()
+		inventoryAction:show()
+	else
+		inventory:show()
+		inventoryAction:hide()
 	end
 end
 
-function MainContainer:appendEventText(txt)
-	eventText:setText(eventText:getText() .. txt)
+function MainContainer:showEnemyEvent(enemy)
+	mainTextContainer:addChild(Label('You encounter a ' .. enemy:getType() .. '. '))
 end
 
-function MainContainer:setEventText(txt)
-	eventText:setText(txt)
+function MainContainer:showLootEvent(items)
+	mainTextContainer:clearChildren()
+	mainTextContainer:addChild(Label('You found a '))
+
+	for i, item in ipairs(items) do
+		local pickupBtn = Button():addChild(Label(item:getType()))
+		pickupBtn.onClick:register(function() self:_pickupItem(item) end)
+		mainTextContainer:addChild(pickupBtn)
+
+		if i ~= #items then
+			mainTextContainer:addChild(Label(", "))
+		end
+	end
 end
 
-function MainContainer:showLootEvent(loot)
-	eventText:setText('You found a ' .. loot .. '.')
+function MainContainer:_pickupItem(item)
+	mainTextContainer:clearChildren()
+	mainTextContainer:addChild(Label('You picked up a ' .. item:getType() .. '.'))
+	self.onItemPickup:emit(item)
+end
 
-	local pickupBtn = Button()
-		:addChild(Label('Pickup'):setTheme(textTheme))
-		:setTheme({ background = { 1, 1, 0, 0.5 } })
-		:setHoverTheme({ background = { 0, 1, 0, 0.5 } })
-	pickupBtn.onClick:register(function()
-		self.onItemPickup:emit(loot)
-		eventText:setText('You picked up a ' .. loot .. '.')
-		actionsContainer:clearChildren()
-	end)
+function MainContainer:showPlayerAttack(dmg)
+	mainTextContainer:addChild(Label('You deal ' .. dmg .. ' damage. '))
+end
 
-	actionsContainer:addChild(pickupBtn)
+function MainContainer:showEnemyKilled(enemy)
+	mainTextContainer:addChild(Label('You killed the ' .. enemy:getType() .. '.'))
+end
+
+function MainContainer:showEnemyAttack(enemy)
+	local enemy_dmg = enemy:getAttack()
+	mainTextContainer:addChild(Label('The ' .. enemy:getType() .. ' attacks you and deals ' .. enemy_dmg .. ' damage.'))
 end
 
 return MainContainer

@@ -20,6 +20,8 @@ local letter_to_image = {
 function Room:new(p, d)
 	self.pos = p
 	self.doors = d
+	self._items = {}
+	self._enemy = nil
 end
 
 function Room:canMove(dir)
@@ -54,24 +56,31 @@ function Room:_getBackground()
 	return letter_to_image[table.concat(letters)]
 end
 
-function Room:setEvent(ev, item)
-	self._event = { ev, item }
+function Room:addItem(item)
+	table.insert(self._items, item)
 end
 
 function Room:setEnemy(enemy)
 	self._enemy = enemy
+	enemy.onDied:register(function()
+		self:setEnemy(nil)
+	end)
 end
 
-function Room:getEnemy(enemy)
+function Room:getEnemy()
 	return self._enemy
 end
 
-function Room:getEvent()
-	return self._event
+function Room:getItems()
+	return self._items
 end
 
-function Room:removeEvent()
-	self._event = nil
+function Room:removeItem(item)
+	for i, v in ipairs(self._items) do
+		if v == item then
+			table.remove(self._items, i)
+		end
+	end
 end
 
 return Room

@@ -52,20 +52,17 @@ function Map:draw()
 
 			local center = pos + roomSize / 2
 			local isActive = self._dungeon.pos == roomPos
-			local ev = room:getEvent()
 			if isActive then
 				self:drawInColor(activeColor, function()
 					love.graphics.circle('fill', center.x, center.y, 2)
 				end)
-			elseif ev ~= nil then
-				if ev[1] == Events.Loot then
-					self:drawInColor(lootColor, function()
+			else
+				if room:getEnemy() then
+					self:drawInColor(enemyColor, function()
 						love.graphics.circle('fill', center.x, center.y, 2)
 					end)
-				end
-
-				if ev[1] == Events.Enemy then
-					self:drawInColor(enemyColor, function()
+				elseif #room:getItems() > 0 then
+					self:drawInColor(lootColor, function()
 						love.graphics.circle('fill', center.x, center.y, 2)
 					end)
 				end

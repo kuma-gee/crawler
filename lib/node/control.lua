@@ -1,13 +1,15 @@
 local Node2D = require 'lib.node.node2d'
 local Control = Node2D:extend()
 
+local defaultTheme = { background = { 0, 0, 0, 0 } }
+
 function Control:new(anchor)
 	Control.super.new(self)
 	self._anchor = (anchor or Vector.TOP_LEFT):normalizedInGrid()
 	self._size = Vector(0, 0)
 	self._minSize = Vector(0, 0)
 	self._logger = Logger.new('Control')
-	self._theme = {}
+	self._theme = defaultTheme
 
 	self._grow = false
 end
@@ -58,7 +60,7 @@ function Control:setMinSize(size, y)
 end
 
 function Control:setTheme(theme)
-	self._theme = theme
+	self._theme = table.merge(self._theme, theme)
 	return self
 end
 
@@ -66,15 +68,11 @@ function Control:getTheme()
 	return self._theme
 end
 
-function Control:_backgroundTheme()
-	return self:getTheme().background or { 0, 0, 0, 0 }
-end
-
 function Control:draw()
 	local pos = self:getTopLeftCorner()
 	local size = self:getSize()
 
-	self:drawInColor(self:_backgroundTheme(), function()
+	self:drawInColor(self:getTheme().background, function()
 		love.graphics.rectangle("fill", pos.x, pos.y, size.x, size.y)
 	end)
 

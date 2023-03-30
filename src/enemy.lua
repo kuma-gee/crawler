@@ -15,8 +15,8 @@ local enemy_health = {
 }
 
 local enemy_values = {
-	{ Types.Bat, 0 },
-	{ Types.Goblin, 20 },
+	{ Types.Bat,      0 },
+	{ Types.Goblin,   20 },
 	{ Types.Skeleton, 50 },
 }
 
@@ -49,7 +49,7 @@ end
 
 function Enemy.randomEnemy()
 	local type = Enemy._randomType()
-	return type, Enemy(type)
+	return Enemy(type)
 end
 
 function Enemy._randomType()

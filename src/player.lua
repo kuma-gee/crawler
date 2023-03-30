@@ -73,4 +73,13 @@ function Player:getWeapons()
 	return weapons
 end
 
+function Player:useItem(item)
+	if item:isThrowable() then
+		table.removeValue(self._inventory, item)
+		return item
+	end
+
+	return nil
+end
+
 return Player

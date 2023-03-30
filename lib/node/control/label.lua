@@ -1,10 +1,16 @@
 local Control = require 'lib.node.control'
 local Label = Control:extend()
 
+local defaultTheme = { color = { 0, 0, 0, 1 }, background = { 0, 0, 0, 0 } }
+
+function Label.setDefaultTheme(theme)
+	defaultTheme = table.merge(defaultTheme, theme)
+end
+
 function Label:new(t)
 	Label.super.new(self)
 	self:setText(t or '')
-	self._textColor = { 0, 0, 0, 1 }
+	self:setTheme(defaultTheme)
 end
 
 function Label:load()
@@ -34,17 +40,9 @@ function Label:draw()
 	local pos = self:getPosition()
 	local size = self:getSize()
 
-	self:drawInColor(self._textColor, function()
+	self:drawInColor(self:getTheme().color, function()
 		love.graphics.printf(self._text, pos.x, pos.y, size.x, "left")
 	end)
-end
-
-function Label:setTheme(theme)
-	if theme.color then
-		self._textColor = theme.color
-	end
-
-	return Label.super.setTheme(self, theme)
 end
 
 function Label:__tostring()
