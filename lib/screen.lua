@@ -16,11 +16,10 @@ function Screen:new(w, h, pixel)
 	self._canvas = love.graphics.newCanvas(w, h)
 	self:_updateScale()
 	love.window.setMode(w, h, {})
-
 end
 
 function Screen:draw()
-	love.graphics.setCanvas(self._canvas)
+	love.graphics.setCanvas({self._canvas, stencil = true})
 	love.graphics.clear()
 
 	Screen.super.draw(self)

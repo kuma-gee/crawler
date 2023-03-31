@@ -5,70 +5,95 @@ local activeColor = { 0, 1, 0, 1 }
 local lootColor = { 0, 0, 1, 1 }
 local enemyColor = { 1, 0, 0, 1 }
 
+local wallColor = { 1, 1, 1, 1 }
+local floorColor = { 1, 1, 1, 0.3 }
+local borderColor = { 1, 1, 1, 1 }
+
+local roomSize = 15
+
 function Map:new(dungeon)
 	Map.super.new(self)
 	self._dungeon = dungeon
 end
 
-function Map:toWorld(v, size)
-	return v:multiply(size)
+function Map:toWorld(v)
+	return v * roomSize
+end
+
+function Map:_drawRoom(room, pos)
+	local lines = {}
+	local topLeft = pos + Vector.TOP_LEFT * roomSize / 2
+	local botRight = pos + Vector.BOT_RIGHT * roomSize / 2
+	if not room:canMove(Vector.UP) then
+		table.insert(lines, { topLeft, topLeft + self:toWorld(Vector.RIGHT) })
+	end
+	if not room:canMove(Vector.LEFT) then
+		table.insert(lines, { topLeft, topLeft + self:toWorld(Vector.DOWN) })
+	end
+	if not room:canMove(Vector.DOWN) then
+		table.insert(lines, { botRight, botRight + self:toWorld(Vector.LEFT) })
+	end
+	if not room:canMove(Vector.RIGHT) then
+		table.insert(lines, { botRight, botRight + self:toWorld(Vector.UP) })
+	end
+
+	self:drawInColor(floorColor, function()
+		love.graphics.rectangle('fill', topLeft.x, topLeft.y, roomSize, roomSize)
+	end)
+
+	self:drawInColor(wallColor, function()
+		for _, points in ipairs(lines) do
+			local p1 = points[1]
+			local p2 = points[2]
+
+			love.graphics.line(p1.x, p1.y, p2.x, p2.y)
+		end
+	end)
+end
+
+function Map:_drawEvents(room, center, isActive)
+	if isActive then
+		self:drawInColor(activeColor, function()
+			love.graphics.circle('fill', center.x, center.y, 2)
+		end)
+	else
+		if room:getEnemy() then
+			self:drawInColor(enemyColor, function()
+				love.graphics.circle('fill', center.x, center.y, 2)
+			end)
+		elseif #room:getItems() > 0 then
+			self:drawInColor(lootColor, function()
+				love.graphics.circle('fill', center.x, center.y, 2)
+			end)
+		end
+	end
 end
 
 function Map:draw()
 	Map.super.draw(self)
-	local roomSize = self:getSize():divide(self._dungeon:getSize())
+
+	local playerPos = self._dungeon.pos
+	local mapCenter = self:getCenter()
+	local start = self:getTopLeftCorner()
+	local size = self:getSize()
+
+	love.graphics.stencil(function() love.graphics.rectangle('fill', start.x, start.y, size.x, size.y) end, "replace", 1)
+	love.graphics.setStencilTest("greater", 0)
 
 	for x, row in pairs(self._dungeon:getMap()) do
 		for y, room in pairs(row) do
-			local roomPos = Vector(x, y)
-			local pos = self:getTopLeftCorner() + self:toWorld(roomPos - Vector(1, 1), roomSize)
-			local lines = {}
-			if not room:canMove(Vector.UP) then
-				table.insert(lines, { pos, pos + self:toWorld(Vector.RIGHT, roomSize) })
-			end
-			if not room:canMove(Vector.LEFT) then
-				table.insert(lines, { pos, pos + self:toWorld(Vector.DOWN, roomSize) })
-			end
-			if not room:canMove(Vector.DOWN) then
-				table.insert(lines,
-					{ pos + self:toWorld(Vector.DOWN, roomSize), pos + self:toWorld(Vector.BOT_RIGHT, roomSize) })
-			end
-			if not room:canMove(Vector.RIGHT) then
-				table.insert(lines,
-					{ pos + self:toWorld(Vector.RIGHT, roomSize), pos + self:toWorld(Vector.BOT_RIGHT, roomSize) })
-			end
+			local localPosFromCenter = Vector(x, y) - playerPos
+			local posFromCenter = self:toWorld(localPosFromCenter)
 
-			self:drawInColor({ 1, 1, 1, 0.3 }, function()
-				love.graphics.rectangle('fill', pos.x, pos.y, roomSize.x, roomSize.y)
-			end)
+			local roomCenter = mapCenter + posFromCenter
+			self:_drawRoom(room, roomCenter)
 
-			self:drawInColor({ 1, 1, 1, 1 }, function()
-				for _, points in ipairs(lines) do
-					local p1 = points[1]
-					local p2 = points[2]
-					love.graphics.line(p1.x, p1.y, p2.x, p2.y)
-				end
-			end)
-
-			local center = pos + roomSize / 2
-			local isActive = self._dungeon.pos == roomPos
-			if isActive then
-				self:drawInColor(activeColor, function()
-					love.graphics.circle('fill', center.x, center.y, 2)
-				end)
-			else
-				if room:getEnemy() then
-					self:drawInColor(enemyColor, function()
-						love.graphics.circle('fill', center.x, center.y, 2)
-					end)
-				elseif #room:getItems() > 0 then
-					self:drawInColor(lootColor, function()
-						love.graphics.circle('fill', center.x, center.y, 2)
-					end)
-				end
-			end
+			local isActive = playerPos == Vector(x, y)
+			self:_drawEvents(room, roomCenter, isActive)
 		end
 	end
+
+	love.graphics.setStencilTest()
 end
 
 return Map

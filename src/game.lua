@@ -44,7 +44,7 @@ function Game:new()
 	Game.super.new(self)
 
 	self.player = Player()
-	self.dungeon = Dungeon(20, 20, self.player)
+	self.dungeon = Dungeon(50, 50, self.player)
 	self.ui = MainContainer(self.dungeon, self.player)
 	self:addChild(self.player, self.dungeon, self.ui)
 

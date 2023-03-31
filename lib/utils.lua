@@ -21,6 +21,9 @@ table.removeValue = function(tab, value)
 	for i, v in ipairs(tab) do
 		if v == value then
 			table.remove(tab, i)
+			return value
 		end
 	end
+
+	return nil
 end

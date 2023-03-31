@@ -62,21 +62,9 @@ function Player:addItem(item)
 	self.onInventoryChange:emit(self._inventory)
 end
 
-function Player:getWeapons()
-	local weapons = {}
-	for _, v in ipairs(self._inventory) do
-		if table.contains(Weapon, v) then
-			table.insert(weapons, v)
-		end
-	end
-
-	return weapons
-end
-
 function Player:useItem(item)
 	if item:isThrowable() then
-		table.removeValue(self._inventory, item)
-		return item
+		return table.removeValue(self._inventory, item)
 	end
 
 	return nil

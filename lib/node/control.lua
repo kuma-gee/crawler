@@ -24,9 +24,12 @@ function Control:setGrow(grow)
 end
 
 function Control:getTopLeftCorner()
+	return self:getCenter() - (self:getSize() / 2)
+end
+
+function Control:getCenter()
 	local size = self:getSize()
-	local center = self:getPosition() - (self._anchor:multiply(size / 2))
-	return center - (size / 2)
+	return self:getPosition() - (self._anchor:multiply(size / 2))
 end
 
 function Control:getMinSize()

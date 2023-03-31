@@ -48,7 +48,6 @@ function MainContainer:new(dungeon, player)
 		mainTextContainer:setGrow(true),
 
 		Map(dungeon):setMinSize(Unit.w(0.1), Unit.w(0.1))
-		:setTheme({ background = { 0, 0, 0.5, 0.5 } })
 	)
 
 	self:setMinSize(Vector(Unit.w(1), 0))
