@@ -2,7 +2,6 @@ require 'src.theme'
 
 local Input  = require 'lib.input'
 local Game   = require 'src.game'
-local Timer  = require 'lib.timer'
 local Screen = require 'lib.screen'
 
 Logger.setLoggingLevel(Logger.Level.DEBUG)

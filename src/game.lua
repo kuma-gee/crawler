@@ -3,7 +3,6 @@ local Dungeon = require 'src.dungeon'
 local MainContainer = require 'src.main-container'
 local Enemy = require 'src.enemy'
 local Item = require 'src.item'
-local Timer = require 'lib.timer'
 
 local Event = require 'src.event'
 local Node = require 'lib.node'
