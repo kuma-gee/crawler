@@ -7,14 +7,19 @@ local enemyColor = { 1, 0, 0, 1 }
 
 local wallColor = { 1, 1, 1, 1 }
 local floorColor = { 1, 1, 1, 0.3 }
-local borderColor = { 1, 1, 1, 1 }
 
 local roomSize = 15
+local dotSize = 1
 
 function Map:new(dungeon)
 	Map.super.new(self)
 	self._dungeon = dungeon
 	self:setRotation(1)
+end
+
+function Map:load()
+	roomSize = math.floor(Unit.w(0.03))
+	dotSize = math.ceil(Unit.w(0.001))
 end
 
 function Map:toWorld(v)
@@ -55,16 +60,16 @@ end
 function Map:_drawEvents(room, center, isActive)
 	if isActive then
 		self:drawInColor(activeColor, function()
-			love.graphics.circle('fill', center.x, center.y, 2)
+			love.graphics.circle('fill', center.x, center.y, dotSize)
 		end)
 	else
 		if room:getEnemy() then
 			self:drawInColor(enemyColor, function()
-				love.graphics.circle('fill', center.x, center.y, 2)
+				love.graphics.circle('fill', center.x, center.y, dotSize)
 			end)
 		elseif #room:getItems() > 0 then
 			self:drawInColor(lootColor, function()
-				love.graphics.circle('fill', center.x, center.y, 2)
+				love.graphics.circle('fill', center.x, center.y, dotSize)
 			end)
 		end
 	end
