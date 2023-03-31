@@ -50,16 +50,9 @@ function MainContainer:new(dungeon, player)
 		Map(dungeon):setMinSize(Unit.w(0.1), Unit.w(0.1))
 		:setTheme({ background = { 0, 0, 0.5, 0.5 } })
 	)
-end
 
-function MainContainer:input(ev)
-	if ev:is(ResizeEvent) then
-		local x, y = ev:getSize()
-		self:setMinSize(Vector(x, 0))
-		self:setPosition(Vector(x / 2, y))
-	end
-
-	MainContainer.super.input(self, ev)
+	self:setMinSize(Vector(Unit.w(1), 0))
+	self:setPosition(Vector(Unit.w(0.5), Unit.h(1)))
 end
 
 function MainContainer:showNoEvents()

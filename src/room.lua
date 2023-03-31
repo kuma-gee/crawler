@@ -62,9 +62,11 @@ end
 
 function Room:setEnemy(enemy)
 	self._enemy = enemy
-	enemy.onDied:register(function()
-		self:setEnemy(nil)
-	end)
+	if enemy ~= nil then
+		enemy.onDied:register(function()
+			self._enemy = nil
+		end)
+	end
 end
 
 function Room:getEnemy()
