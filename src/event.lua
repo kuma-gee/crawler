@@ -47,7 +47,7 @@ local function _updateEventChances(ev, dungeon, player)
 		_increaseEvent(Events.Enemy, 5)
 	else
 		_increaseEvent(Events.Loot, 20)
-		_increaseEvent(Events.Enemy, 20)
+		_increaseEvent(Events.Enemy, 200)
 	end
 
 	_resetEvent(ev)
@@ -79,6 +79,5 @@ local function getRandomEventAndUpdate(dungeon, player)
 	_updateEventChances(ev, dungeon, player)
 	return ev
 end
-
 
 return setmetatable({ randomEvent = getRandomEventAndUpdate, Enemy = Events.Enemy, Loot = Events.Loot }, {})

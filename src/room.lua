@@ -41,6 +41,11 @@ function Room:draw()
 	local scaleX = w / background:getWidth()
 	local scaleY = h / background:getHeight()
 	love.graphics.draw(background, love.math.newTransform(0, 0, 0, scaleX, scaleY))
+
+	local enemy = self:getEnemy()
+	if enemy ~= nil then
+		enemy:draw()
+	end
 end
 
 function Room:_getBackground()
@@ -63,6 +68,7 @@ end
 function Room:setEnemy(enemy)
 	self._enemy = enemy
 	if enemy ~= nil then
+		enemy:load()
 		enemy.onDied:register(function()
 			self._enemy = nil
 		end)
