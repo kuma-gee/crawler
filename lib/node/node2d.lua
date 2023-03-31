@@ -4,6 +4,7 @@ local Node2D = Node:extend()
 function Node2D:new(pos)
 	Node2D.super.new(self)
 	self._pos = pos or Vector.ZERO
+	self._rotation = 0
 	self._visible = true
 end
 
@@ -21,7 +22,10 @@ end
 
 function Node2D:draw()
 	if self._visible then
+		love.graphics.push()
+		love.graphics.rotate(self:getGlobalRotation())
 		Node2D.super.draw(self)
+		love.graphics.pop()
 	end
 end
 
@@ -54,6 +58,23 @@ function Node2D:getGlobalPosition()
 		root = self._parent:getGlobalPosition()
 	end
 	return root + self._pos
+end
+
+function Node2D:setRotation(angle)
+	self._rotation = angle
+end
+
+function Node2D:getRotation()
+	return self._rotation
+end
+
+function Node2D:getGlobalRotation()
+	local rotation = self._rotation
+	if self._parent and self._parent:is(Node2D) then
+		rotation = rotation + self._parent:getGlobalRotation()
+	end
+
+	return rotation
 end
 
 return Node2D

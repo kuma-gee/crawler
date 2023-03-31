@@ -14,6 +14,7 @@ local roomSize = 15
 function Map:new(dungeon)
 	Map.super.new(self)
 	self._dungeon = dungeon
+	self:setRotation(1)
 end
 
 function Map:toWorld(v)
