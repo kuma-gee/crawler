@@ -6,10 +6,10 @@ local Screen = require 'lib.screen'
 
 Logger.setLoggingLevel(Logger.Level.DEBUG)
 
-local root = Screen(1920 / 4, 1080 / 4, true):addChild(Game())
+local root = Screen(1920 / 10, 1080 / 10, true):addChild(Game())
 
 function love.load()
-    love.graphics.setNewFont('jackeyfont.ttf', 12)
+    love.graphics.setNewFont('TeenyTinyPixls-o2zo.ttf', 5)
     -- math.randomseed(os.time())
 
     root:load()

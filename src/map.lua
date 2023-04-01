@@ -19,7 +19,7 @@ end
 
 function Map:load()
 	roomSize = math.floor(Unit.w(0.03))
-	dotSize = math.ceil(Unit.w(0.001))
+	dotSize = 1
 end
 
 function Map:toWorld(v)
@@ -27,6 +27,8 @@ function Map:toWorld(v)
 end
 
 function Map:_drawRoom(room, pos)
+	love.graphics.setLineWidth(1)
+
 	local lines = {}
 	local topLeft = pos + Vector.TOP_LEFT * roomSize / 2
 	local botRight = pos + Vector.BOT_RIGHT * roomSize / 2
@@ -60,16 +62,19 @@ end
 function Map:_drawEvents(room, center, isActive)
 	if isActive then
 		self:drawInColor(activeColor, function()
-			love.graphics.circle('fill', center.x, center.y, dotSize)
+			love.graphics.points(center.x, center.y)
+			-- love.graphics.circle('fill', center.x, center.y, dotSize)
 		end)
 	else
 		if room:getEnemy() then
 			self:drawInColor(enemyColor, function()
-				love.graphics.circle('fill', center.x, center.y, dotSize)
+				love.graphics.points(center.x, center.y)
+				-- love.graphics.circle('fill', center.x, center.y, dotSize)
 			end)
 		elseif #room:getItems() > 0 then
 			self:drawInColor(lootColor, function()
-				love.graphics.circle('fill', center.x, center.y, dotSize)
+				love.graphics.points(center.x, center.y)
+				-- love.graphics.circle('fill', center.x, center.y, dotSize)
 			end)
 		end
 	end
