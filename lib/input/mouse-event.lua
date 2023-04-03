@@ -15,4 +15,8 @@ function MouseMoveEvent:setPosition(x, y)
 	self.x, self.y = x, y
 end
 
+function MouseMoveEvent:__tostring()
+	return 'MouseEvent(' .. self.x .. ',' .. self.y .. ')'
+end
+
 return MouseMoveEvent

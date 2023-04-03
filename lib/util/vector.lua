@@ -275,6 +275,10 @@ function vector:maximize(v)
 	)
 end
 
+function vector:value()
+	return self.x, self.y
+end
+
 -- the module
 return setmetatable({
 	new             = new,

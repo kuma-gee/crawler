@@ -13,13 +13,14 @@ function Screen:new(w, h, pixel)
 	end
 
 	Unit.setScreenSize(w, h)
+	self._gameSize = Vector(w, h)
 	self._canvas = love.graphics.newCanvas(w, h)
-	self:_updateScale()
+	self:_updateScaleAndOffset()
 	love.window.setMode(w, h, {})
 end
 
 function Screen:draw()
-	love.graphics.setCanvas({self._canvas, stencil = true})
+	love.graphics.setCanvas({ self._canvas, stencil = true })
 	love.graphics.clear()
 
 	Screen.super.draw(self)
@@ -32,9 +33,16 @@ function Screen:draw()
 	love.graphics.draw(self._canvas, pos.x, pos.y, 0, sx, sy)
 end
 
+function Screen:_windowSize()
+	return Vector(love.graphics.getDimensions())
+end
+
 function Screen:_toGame(x, y)
-	local sx, sy = self:_getScale()
-	return x * sx, y * sy
+	local offset = self:getPosition()
+	local pos = Vector(x, y) - offset
+	pos = pos:divide(self._scale)
+
+	return pos:value()
 end
 
 function Screen:_getScale()
@@ -45,15 +53,15 @@ function Screen:input(ev)
 	if ev:is(MouseEvent) then
 		ev:setPosition(self:_toGame(ev:getPosition()))
 	elseif ev:is(ResizeEvent) then
-		self:_updateScale()
+		self:_updateScaleAndOffset()
 	end
 
 	Screen.super.input(self, ev)
 end
 
-function Screen:_updateScale()
-	local realSize = Vector(love.graphics.getDimensions())
-	local gameSize = Vector(self._canvas:getDimensions())
+function Screen:_updateScaleAndOffset()
+	local realSize = self:_windowSize()
+	local gameSize = self._gameSize
 
 	local center = realSize / 2
 
