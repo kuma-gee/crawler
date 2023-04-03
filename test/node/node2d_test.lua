@@ -13,8 +13,8 @@ describe('Node2D', function()
 		local child = Node2D()
 		node:addChild(child)
 
-		child:setPosition(Vector(1, 1))
-		node:setPosition(Vector(5, 5))
+		child:setGlobalPosition(Vector(1, 1))
+		node:setGlobalPosition(Vector(5, 5))
 
 		expect(child:getPosition()).to.equal(Vector(1, 1))
 		expect(child:getGlobalPosition()).to.equal(Vector(6, 6))

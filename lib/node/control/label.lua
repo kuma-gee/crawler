@@ -37,7 +37,7 @@ end
 function Label:draw()
 	Label.super.draw(self)
 
-	local pos = self:getPosition()
+	local pos = self:getGlobalPosition()
 	local size = self:getSize()
 
 	self:drawInColor(self:getTheme().color, function()

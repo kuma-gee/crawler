@@ -37,7 +37,7 @@ end
 
 function Button:_updateHover(ev)
 	local mx, my = ev:getPosition()
-	local topLeft = self:getPosition()
+	local topLeft = self:getGlobalPosition()
 	local botRight = topLeft + self:getSize()
 
 	local insideX = mx > topLeft.x and mx < botRight.x

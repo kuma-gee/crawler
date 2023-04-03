@@ -3,8 +3,8 @@ local Node2D = Node:extend()
 
 function Node2D:new(pos)
 	Node2D.super.new(self)
-	self._pos = pos or Vector.ZERO
-	self._rotation = 0
+	self._global_pos = pos or Vector.ZERO
+	self._transform = love.math.newTransform()
 	self._visible = true
 end
 
@@ -23,7 +23,7 @@ end
 function Node2D:draw()
 	if self._visible then
 		love.graphics.push()
-		love.graphics.rotate(self:getGlobalRotation())
+		-- love.graphics.applyTransform(self._transform)
 		Node2D.super.draw(self)
 		love.graphics.pop()
 	end
@@ -43,38 +43,31 @@ function Node:eachVisibleChild(fn)
 	end
 end
 
-function Node2D:setPosition(pos)
-	self._pos = pos
+function Node2D:setGlobalPosition(pos)
+	local x, y = self._transform:transformPoint(pos.x, pos.y)
+	self._transform:translate(-x, -y)
 	return self
 end
 
-function Node2D:getPosition()
-	return self._pos:clone()
-end
-
 function Node2D:getGlobalPosition()
-	local root = Vector.ZERO
-	if self._parent and self._parent:is(Node2D) then
-		root = self._parent:getGlobalPosition()
-	end
-	return root + self._pos
+	return Vector(self._transform:inverseTransformPoint(0, 0))
 end
 
 function Node2D:setRotation(angle)
-	self._rotation = angle
+	self._transform:rotate(angle)
 end
 
-function Node2D:getRotation()
-	return self._rotation
-end
+-- function Node2D:getRotation()
+-- 	return self._rotation
+-- end
 
-function Node2D:getGlobalRotation()
-	local rotation = self._rotation
-	if self._parent and self._parent:is(Node2D) then
-		rotation = rotation + self._parent:getGlobalRotation()
-	end
+-- function Node2D:getGlobalRotation()
+-- 	local rotation = self._rotation
+-- 	if self._parent and self._parent:is(Node2D) then
+-- 		rotation = rotation + self._parent:getGlobalRotation()
+-- 	end
 
-	return rotation
-end
+-- 	return rotation
+-- end
 
 return Node2D

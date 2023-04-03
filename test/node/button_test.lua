@@ -51,7 +51,7 @@ describe('Button', function()
 
 	it('not set pressed if not hovering', function()
 		btn:addChild(Control():setSize(Vector(10, 2)))
-		btn:setPosition(Vector(1, 1))
+		btn:setGlobalPosition(Vector(1, 1))
 		btn:update()
 
 		btn:input(MouseEvent(Vector.ZERO, 1, true))

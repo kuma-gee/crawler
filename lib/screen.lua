@@ -28,7 +28,7 @@ function Screen:draw()
 	love.graphics.setCanvas()
 
 	local sx, sy = self:_getScale()
-	local pos = self:getPosition()
+	local pos = self:getGlobalPosition()
 
 	love.graphics.draw(self._canvas, pos.x, pos.y, 0, sx, sy)
 end
@@ -38,7 +38,7 @@ function Screen:_windowSize()
 end
 
 function Screen:_toGame(x, y)
-	local offset = self:getPosition()
+	local offset = self:getGlobalPosition()
 	local pos = Vector(x, y) - offset
 	pos = pos:divide(self._scale)
 
@@ -77,7 +77,7 @@ function Screen:_updateScaleAndOffset()
 	end
 
 	self._scale = realSize:divide(gameSize)
-	self:setPosition(center - realSize / 2)
+	self:setGlobalPosition(center - realSize / 2)
 end
 
 return Screen

@@ -16,8 +16,8 @@ local enemy_health = {
 }
 
 local enemy_values = {
-	{ Types.Bat, 0 },
-	{ Types.Goblin, 20 },
+	{ Types.Bat,      0 },
+	{ Types.Goblin,   20 },
 	{ Types.Skeleton, 50 },
 }
 
@@ -37,7 +37,7 @@ function Enemy:new(type)
 end
 
 function Enemy:load()
-	self._sprite:setPosition(Vector(Unit.w(0.5), Unit.h(0.5)))
+	self._sprite:setGlobalPosition(Vector(Unit.w(0.5), Unit.h(0.5)))
 end
 
 function Enemy:hurt(dmg)

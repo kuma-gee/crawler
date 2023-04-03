@@ -51,7 +51,7 @@ function MainContainer:new(dungeon, player)
 	)
 
 	self:setMinSize(Vector(Unit.w(1), 0))
-	self:setPosition(Vector(Unit.w(0.5), Unit.h(1)))
+	self:setGlobalPosition(Vector(Unit.w(0.5), Unit.h(1)))
 end
 
 function MainContainer:showNoEvents()

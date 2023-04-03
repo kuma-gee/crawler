@@ -9,7 +9,6 @@ local wallColor = { 1, 1, 1, 1 }
 local floorColor = { 1, 1, 1, 0.3 }
 
 local roomSize = 15
-local dotSize = 1
 
 function Map:new(dungeon)
 	Map.super.new(self)
@@ -19,7 +18,6 @@ end
 
 function Map:load()
 	roomSize = math.floor(Unit.w(0.03))
-	dotSize = 1
 end
 
 function Map:toWorld(v)
@@ -63,26 +61,21 @@ function Map:_drawEvents(room, center, isActive)
 	if isActive then
 		self:drawInColor(activeColor, function()
 			love.graphics.points(center.x, center.y)
-			-- love.graphics.circle('fill', center.x, center.y, dotSize)
 		end)
 	else
 		if room:getEnemy() then
 			self:drawInColor(enemyColor, function()
 				love.graphics.points(center.x, center.y)
-				-- love.graphics.circle('fill', center.x, center.y, dotSize)
 			end)
 		elseif #room:getItems() > 0 then
 			self:drawInColor(lootColor, function()
 				love.graphics.points(center.x, center.y)
-				-- love.graphics.circle('fill', center.x, center.y, dotSize)
 			end)
 		end
 	end
 end
 
 function Map:draw()
-	Map.super.draw(self)
-
 	local playerPos = self._dungeon.pos
 	local mapCenter = self:getCenter()
 	local start = self:getTopLeftCorner()
@@ -105,6 +98,15 @@ function Map:draw()
 	end
 
 	love.graphics.setStencilTest()
+	Map.super.draw(self)
+end
+
+function Map:update(_)
+	-- Map.super.update(_)
+
+	-- self:setRotation(0.1)
+
+	-- print(self._transform:transformPoint(192, 108))
 end
 
 return Map

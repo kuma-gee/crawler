@@ -5,68 +5,14 @@ Container.Align = { Start = 'start', Center = 'center', End = 'end', Stretch = '
 
 function Container:new(dir, anchor, align)
 	Container.super.new(self, anchor)
-	-- self._pad = { 0, 0, 0, 0 }
 	self._dir = (dir or Vector.DOWN):abs():normalizedInGrid()
 	self._logger = Logger.new('Container')
 	self._align = align or Container.Align.Start
 end
 
--- function Container:_getTopPadding()
--- 	return self._pad[1]
--- end
-
--- function Container:_getRightPadding()
--- 	return self._pad[2]
--- end
-
--- function Container:_getBottomPadding()
--- 	return self._pad[3]
--- end
-
--- function Container:_getLeftPadding()
--- 	return self._pad[4]
--- end
-
--- function Container:setSize(size)
--- 	self._logger:warn("Setting container size is not supported.")
--- 	return self
--- end
-
--- function Container:getSize()
--- 	local size = Container.super.getSize(self)
--- 	return Vector(
--- 		size.x + self:_getLeftPadding() + self:_getRightPadding(),
--- 		size.y + self:_getTopPadding() + self:_getBottomPadding()
--- 	);
--- end
-
--- function Container:setPadding(v)
--- 	if type(v) == 'table' then
--- 		if #v >= 4 then
--- 			self._pad = { v[1], v[2], v[3], v[4] }
--- 		elseif #v >= 2 then
--- 			self._pad = { v[1], v[2], v[1], v[2] }
--- 		else
--- 			self._pad = { v[1], v[1], v[1], v[1] }
--- 		end
--- 	elseif not (v == nil) then
--- 		self._pad = { v, v, v, v }
--- 	end
-
--- 	return self
--- end
-
 function Container:_getInnerTopLeftCorner()
-	return self:getTopLeftCorner() -- + self:_topLeftPadding()
+	return self:getTopLeftCorner()
 end
-
--- function Container:_topLeftPadding()
--- 	return Vector(self:_getLeftPadding(), self:_getTopPadding())
--- end
-
--- function Container:_bottomRightPadding()
--- 	return Vector(self:_getRightPadding(), self:_getBottomPadding())
--- end
 
 function Container:update(_)
 	self:_updateSize()
@@ -74,7 +20,7 @@ function Container:update(_)
 	local currPos = self:getTopLeftCorner()
 
 	self:eachVisibleChild(function(child)
-		child:setPosition(self:_getPositionForAlignment(currPos, child))
+		child:setGlobalPosition(self:_getPositionForAlignment(currPos, child))
 		currPos = currPos + child:getSize():multiply(self._dir)
 	end)
 end
@@ -138,15 +84,7 @@ function Container:_updateSize()
 	end
 
 
-	Container.super.setSize(self, childrenSize) --+ self:_topLeftPadding() + self:_bottomRightPadding())
-end
-
-function Container:setTheme(theme)
-	-- if theme.padding then
-	-- 	self:setPadding(theme.padding)
-	-- end
-
-	return Container.super.setTheme(self, theme)
+	Container.super.setSize(self, childrenSize)
 end
 
 function Container:__tostring()
