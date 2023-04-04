@@ -4,9 +4,12 @@ local Input  = require 'lib.input'
 local Game   = require 'src.game'
 local Screen = require 'lib.screen'
 
+local Test   = require 'test.test'
+
 Logger.setLoggingLevel(Logger.Level.DEBUG)
 
-local root = Screen(1920 / 10, 1080 / 10, true):addChild(Game())
+local root = Test()
+-- Screen(1920 / 10, 1080 / 10, true):addChild(Game())
 
 function love.load()
     love.graphics.setNewFont('TeenyTinyPixls-o2zo.ttf', 5)

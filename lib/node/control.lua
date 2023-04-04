@@ -29,7 +29,7 @@ end
 
 function Control:getCenter()
 	local size = self:getSize()
-	return self:getGlobalPosition() - (self._anchor:multiply(size / 2))
+	return self._anchor:multiply(size / 2)
 end
 
 function Control:getMinSize()

@@ -43,11 +43,11 @@ function MainContainer:new(dungeon, player)
 	end)
 
 	self:addChild(
-		statusContainer:setMinSize(Unit.w(0.2), 0),
+		statusContainer:setMinSize(Unit.w(0.2), 0)
 
-		mainTextContainer:setGrow(true),
+		-- mainTextContainer:setGrow(true),
 
-		Map(dungeon):setMinSize(Unit.w(0.1), Unit.w(0.1))
+		-- Map(dungeon):setMinSize(Unit.w(0.1), Unit.w(0.1))
 	)
 
 	self:setMinSize(Vector(Unit.w(1), 0))

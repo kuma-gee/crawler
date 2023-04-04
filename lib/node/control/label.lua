@@ -37,11 +37,9 @@ end
 function Label:draw()
 	Label.super.draw(self)
 
-	local pos = self:getGlobalPosition()
 	local size = self:getSize()
-
 	self:drawInColor(self:getTheme().color, function()
-		love.graphics.printf(self._text, pos.x, pos.y, size.x, "left")
+		love.graphics.printf(self._text, 0, 0, size.x, "left")
 	end)
 end
 

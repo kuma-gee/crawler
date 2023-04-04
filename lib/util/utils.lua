@@ -27,3 +27,15 @@ table.removeValue = function(tab, value)
 
 	return nil
 end
+
+
+math.tau = math.pi * 2
+
+math.round = function(n, decimalCount)
+	if decimalCount == 0 then
+		return math.floor(n)
+	else
+		local precision = 10 * decimalCount
+		return math.floor(n * precision) / precision
+	end
+end

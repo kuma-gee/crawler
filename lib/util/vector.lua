@@ -217,13 +217,13 @@ end
 
 function vector:rotateInplace(phi)
 	local c, s = cos(phi), sin(phi)
-	self.x, self.y = c * self.x - s * self.y, s * self.x + c * self.y
+	self.x = c * self.x - s * self.y
+	self.y = s * self.x + c * self.y
 	return self
 end
 
 function vector:rotated(phi)
-	local c, s = cos(phi), sin(phi)
-	return new(c * self.x - s * self.y, s * self.x + c * self.y)
+	return self:clone():rotateInplace(phi)
 end
 
 function vector:perpendicular()
@@ -251,9 +251,8 @@ end
 
 -- ref.: http://blog.signalsondisplay.com/?p=336
 function vector:trimInplace(maxLen)
-	local s = maxLen * maxLen / self:len2()
-	s = (s > 1 and 1) or math.sqrt(s)
-	self.x, self.y = self.x * s, self.y * s
+	self.x = math.round(self.x, maxLen)
+	self.y = math.round(self.y, maxLen)
 	return self
 end
 
