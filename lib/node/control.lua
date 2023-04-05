@@ -29,7 +29,7 @@ end
 
 function Control:getCenter()
 	local size = self:getSize()
-	return self._anchor:multiply(size / 2)
+	return Vector.ZERO - self._anchor:multiply(size / 2)
 end
 
 function Control:getMinSize()
@@ -71,15 +71,13 @@ function Control:getTheme()
 	return self._theme
 end
 
-function Control:draw()
+function Control:drawLocal()
 	local pos = self:getTopLeftCorner()
 	local size = self:getSize()
 
 	self:drawInColor(self:getTheme().background, function()
 		love.graphics.rectangle("fill", pos.x, pos.y, size.x, size.y)
 	end)
-
-	Control.super.draw(self)
 end
 
 function Control:getMousePosition()

@@ -20,7 +20,7 @@ function Container:update(_)
 	local currPos = self:getTopLeftCorner()
 
 	self:eachVisibleChild(function(child)
-		child:setGlobalPosition(self:_getPositionForAlignment(currPos, child))
+		child:setPosition(self:_getPositionForAlignment(currPos, child))
 		currPos = currPos + child:getSize():multiply(self._dir)
 	end)
 end

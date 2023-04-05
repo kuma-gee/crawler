@@ -101,12 +101,12 @@ function Map:draw()
 	Map.super.draw(self)
 end
 
-function Map:update(_)
+-- function Map:update(_)
 	-- Map.super.update(_)
 
 	-- self:setRotation(0.1)
 
 	-- print(self._transform:transformPoint(192, 108))
-end
+-- end
 
 return Map

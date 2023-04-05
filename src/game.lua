@@ -45,6 +45,7 @@ function Game:new()
 	self.player = Player()
 	self.dungeon = Dungeon(50, 50, self.player)
 	self.ui = MainContainer(self.dungeon, self.player)
+
 	self:addChild(self.player, self.dungeon, self.ui)
 
 	self.ui.onItemPickup:register(function(item)
@@ -85,10 +86,6 @@ function Game:new()
 	self.dungeon.onNewRoom:register(function(room) self:_setNewRoomEvent(room) end)
 	self.dungeon.onRoomEnter:register(function(room) self:_showRoomEvent(room) end)
 	self.dungeon:move(Vector.ZERO)
-end
-
-function Game:draw()
-	Game.super.draw(self)
 end
 
 return Game

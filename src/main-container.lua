@@ -1,6 +1,5 @@
 local Button = require 'lib.node.control.button'
 local Label = require 'lib.node.control.label'
-local ResizeEvent = require 'lib.input.resize-event'
 local Container = require 'lib.node.control.container'
 
 local Map = require 'src.map'
@@ -43,15 +42,13 @@ function MainContainer:new(dungeon, player)
 	end)
 
 	self:addChild(
-		statusContainer:setMinSize(Unit.w(0.2), 0)
-
-		-- mainTextContainer:setGrow(true),
-
-		-- Map(dungeon):setMinSize(Unit.w(0.1), Unit.w(0.1))
+		statusContainer:setMinSize(Unit.w(0.2), 0),
+		mainTextContainer:setGrow(true),
+		Map(dungeon):setMinSize(Unit.w(0.1), Unit.w(0.1))
 	)
 
 	self:setMinSize(Vector(Unit.w(1), 0))
-	self:setGlobalPosition(Vector(Unit.w(0.5), Unit.h(1)))
+	self:setPosition(Vector(Unit.w(0.5), Unit.h(1)))
 end
 
 function MainContainer:showNoEvents()

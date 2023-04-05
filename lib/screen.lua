@@ -1,8 +1,8 @@
 local MouseEvent = require 'lib.input.mouse-event'
 local ResizeEvent = require 'lib.input.resize-event'
 
-local Node2D = require 'lib.node.node2d'
-local Screen = Node2D:extend()
+local Node = require 'lib.node'
+local Screen = Node:extend()
 
 function Screen:new(w, h, pixel)
 	Screen.super.new(self)
@@ -14,6 +14,7 @@ function Screen:new(w, h, pixel)
 
 	Unit.setScreenSize(w, h)
 	self._gameSize = Vector(w, h)
+	self._pos = Vector.ZERO
 	self._canvas = love.graphics.newCanvas(w, h)
 	self:_updateScaleAndOffset()
 	love.window.setMode(w, h, {})
@@ -26,11 +27,7 @@ function Screen:draw()
 	Screen.super.draw(self)
 
 	love.graphics.setCanvas()
-
-	local sx, sy = self:_getScale()
-	local pos = self:getGlobalPosition()
-
-	love.graphics.draw(self._canvas, pos.x, pos.y, 0, sx, sy)
+	love.graphics.draw(self._canvas, self._pos.x, self._pos.y, 0, self:_getScale())
 end
 
 function Screen:_windowSize()
@@ -38,7 +35,7 @@ function Screen:_windowSize()
 end
 
 function Screen:_toGame(x, y)
-	local offset = self:getGlobalPosition()
+	local offset = self._pos
 	local pos = Vector(x, y) - offset
 	pos = pos:divide(self._scale)
 
@@ -77,7 +74,7 @@ function Screen:_updateScaleAndOffset()
 	end
 
 	self._scale = realSize:divide(gameSize)
-	self:setGlobalPosition(center - realSize / 2)
+	self._pos = center - realSize / 2
 end
 
 return Screen

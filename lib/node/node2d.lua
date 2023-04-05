@@ -23,8 +23,8 @@ function Node2D:draw()
 	if self._visible then
 		love.graphics.push()
 		love.graphics.applyTransform(self._transform)
-		Node2D.super.draw(self)
 		self:drawLocal()
+		Node2D.super.draw(self)
 		love.graphics.pop()
 	end
 end
@@ -50,7 +50,7 @@ function Node2D:getOriginTransform()
 	local transform = love.math.newTransform()
 	if self._parent and self._parent:is(Node2D) then
 		transform:apply(self._parent:getOriginTransform())
-		transform:apply(self._parent:getTransform())
+		transform:apply(self._parent:getLocalTransform())
 	end
 
 	return transform
@@ -80,14 +80,21 @@ function Node2D:setPosition(pos)
 	return self
 end
 
-function Node2D:setGlobalPosition(pos)
-	local origin = self:getOriginTransform()
-	local rel = Vector(origin:inverseTransformPoint(pos.x, pos.y))
-	-- print(self:getTransform():inverseTransformPoint(pos.x, pos.y))
-	-- self._transform:translate(rel.x, rel.y)
-	self:setPosition(rel)
-	return self
-end
+-- function Node2D:setGlobalPosition(pos)
+-- 	local transform = self:getGlobalTransform()
+-- 	local r = self:_getRotationOfTransform(transform)
+
+-- 	-- if r ~= 0 then
+-- 	-- 	transform:rotate(r)
+-- 	-- end
+
+-- 	local targetLocalPos = Vector(transform:inverseTransformPoint(pos.x, pos.y))
+-- 	-- print(self:getTransform():inverseTransformPoint(pos.x, pos.y))
+-- 	-- self._transform:translate(rel.x, rel.y)
+-- 	print(targetLocalPos)
+-- 	self:setPosition(targetLocalPos)
+-- 	return self
+-- end
 
 function Node2D:getGlobalPosition()
 	local origin = self:getGlobalTransform()
@@ -101,23 +108,15 @@ function Node2D:setRotation(angle)
 end
 
 function Node2D:getRotation()
-	local pos = self:getPosition()
-	local up = self:getPosition(Vector.UP)
-	local dir = (up - pos)
-	return Vector.UP:angleTo(dir)
+	return self:_getRotationOfTransform(self:getLocalTransform())
 end
 
--- function Node2D:getRotation()
--- 	return self._rotation
--- end
-
--- function Node2D:getGlobalRotation()
--- 	local rotation = self._rotation
--- 	if self._parent and self._parent:is(Node2D) then
--- 		rotation = rotation + self._parent:getGlobalRotation()
--- 	end
-
--- 	return rotation
--- end
+function Node2D:_getRotationOfTransform(transform)
+	local dir = Vector.UP
+	local pos = Vector(transform:transformPoint(0, 0))
+	local dirPos = Vector(transform:transformPoint(dir:value()))
+	local localDir = dirPos - pos
+	return localDir:angleTo(dir)
+end
 
 return Node2D
