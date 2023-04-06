@@ -35,6 +35,10 @@ function Dungeon:getSize()
 	return self.size
 end
 
+function Dungeon:getRotation()
+	return self.rotation
+end
+
 function Dungeon:move(dir)
 	local curr_room = self:activeRoom()
 

@@ -33,7 +33,7 @@ math.tau = math.pi * 2
 
 math.round = function(n, decimalCount)
 	if decimalCount == 0 then
-		return math.floor(n)
+		return math.floor(n + 0.5)
 	else
 		local precision = 10 * decimalCount
 		return math.floor(n * precision) / precision

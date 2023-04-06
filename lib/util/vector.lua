@@ -251,16 +251,23 @@ end
 
 -- ref.: http://blog.signalsondisplay.com/?p=336
 function vector:trimInplace(maxLen)
-	self.x = math.round(self.x, maxLen)
-	self.y = math.round(self.y, maxLen)
+	self.x = math.round(self.x, maxLen or 0)
+	self.y = math.round(self.y, maxLen or 0)
 	return self
 end
 
-function vector:angleTo(other)
-	if other then
-		return atan2(self.y, self.x) - atan2(other.y, other.x)
+function vector:angleTo(other, modulo)
+	-- if other then
+	-- 	return atan2(self.y, self.x) - atan2(other.y, other.x)
+	-- end
+	-- return atan2(self.y, self.x)
+	local result = math.acos(self * other)
+	if modulo ~= nil then
+		local remain = result % modulo
+		result = result - remain
 	end
-	return atan2(self.y, self.x)
+
+	return result
 end
 
 function vector:trimmed(maxLen)

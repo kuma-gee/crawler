@@ -11,7 +11,7 @@ local floorColor = { 1, 1, 1, 0.3 }
 local roomSize = 15
 
 function Map:new(dungeon)
-	Map.super.new(self)
+	Map.super.new(self, Vector.ZERO)
 	self._dungeon = dungeon
 end
 
@@ -74,6 +74,10 @@ function Map:_drawEvents(room, center, isActive)
 	end
 end
 
+function Map:setPosition(pos)
+	Map.super.setPosition(self, pos - self:getTopLeftCorner())
+end
+
 function Map:drawLocal()
 	local playerPos = self._dungeon.pos
 	local mapCenter = self:getCenter()
@@ -82,6 +86,9 @@ function Map:drawLocal()
 
 	love.graphics.stencil(function() love.graphics.rectangle('fill', start.x, start.y, size.x, size.y) end, "replace", 1)
 	love.graphics.setStencilTest("greater", 0)
+
+	-- love.graphics.push()
+	-- love.graphics.rotate(self._dungeon:getRotation())
 
 	for x, row in pairs(self._dungeon:getMap()) do
 		for y, room in pairs(row) do
@@ -96,6 +103,7 @@ function Map:drawLocal()
 		end
 	end
 
+	-- love.graphics.pop()
 	love.graphics.setStencilTest()
 end
 

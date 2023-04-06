@@ -101,22 +101,23 @@ function Node2D:getGlobalPosition()
 	return Vector(origin:transformPoint(0, 0))
 end
 
-function Node2D:setRotation(angle)
-	local r = self:getRotation()
-	local diff = r - angle
-	self._transform:rotate(diff)
-end
+-- function Node2D:setRotation(angle)
+-- 	local r = self:getRotation()
+-- 	local diff = r - angle
+-- 	print(diff)
+-- 	self._transform:rotate(diff)
+-- end
 
-function Node2D:getRotation()
-	return self:_getRotationOfTransform(self:getLocalTransform())
-end
+-- function Node2D:getRotation()
+-- 	return self:_getRotationOfTransform(self:getLocalTransform()) % math.tau
+-- end
 
-function Node2D:_getRotationOfTransform(transform)
-	local dir = Vector.UP
-	local pos = Vector(transform:transformPoint(0, 0))
-	local dirPos = Vector(transform:transformPoint(dir:value()))
-	local localDir = dirPos - pos
-	return localDir:angleTo(dir)
-end
+-- function Node2D:_getRotationOfTransform(transform)
+-- 	local dir = Vector.UP
+-- 	local pos = Vector(transform:transformPoint(0, 0))
+-- 	local dirPos = Vector(transform:transformPoint(dir:value()))
+-- 	local localDir = dirPos - pos
+-- 	return localDir:angleTo(dir)
+-- end
 
 return Node2D
