@@ -13,7 +13,6 @@ local roomSize = 15
 function Map:new(dungeon)
 	Map.super.new(self)
 	self._dungeon = dungeon
-	self:setRotation(1)
 end
 
 function Map:load()
@@ -75,7 +74,7 @@ function Map:_drawEvents(room, center, isActive)
 	end
 end
 
-function Map:draw()
+function Map:drawLocal()
 	local playerPos = self._dungeon.pos
 	local mapCenter = self:getCenter()
 	local start = self:getTopLeftCorner()
@@ -98,15 +97,6 @@ function Map:draw()
 	end
 
 	love.graphics.setStencilTest()
-	Map.super.draw(self)
 end
-
--- function Map:update(_)
-	-- Map.super.update(_)
-
-	-- self:setRotation(0.1)
-
-	-- print(self._transform:transformPoint(192, 108))
--- end
 
 return Map
