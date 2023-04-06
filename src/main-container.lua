@@ -1,15 +1,16 @@
 local Button = require 'lib.node.control.button'
 local Label = require 'lib.node.control.label'
+local Control = require 'lib.node.control'
 local Container = require 'lib.node.control.container'
 
 local Map = require 'src.map'
 
-local MainContainer = Container:extend()
+local MainContainer = Control:extend()
 
 local health = Label()
 local inventory = Container(Vector.DOWN):setTheme({ 0, 0.5, 0, 0.5 })
 local inventoryAction = Container(Vector.DOWN):setTheme({ 0, 0.5, 0, 0.5 })
-local statusContainer = Container(Vector.DOWN)
+local statusContainer = Container()
 	:setTheme({ background = { 0, 0.5, 0, 0.5 } })
 	:addChild(health)
 	:addChild(inventory)
@@ -19,7 +20,7 @@ local mainTextContainer = Container(Vector.RIGHT)
 	:setTheme({ background = { 0.5, 0.5, 0, 0.5 } })
 
 function MainContainer:new(dungeon, player)
-	MainContainer.super.new(self, Vector.RIGHT, Vector.DOWN, Container.Align.Stretch)
+	MainContainer.super.new(self)
 	self:setTheme({ background = { 0.5, 0, 0, 0.5 } })
 
 	self.onItemPickup = Signal()
@@ -41,14 +42,15 @@ function MainContainer:new(dungeon, player)
 		end
 	end)
 
+	local h = 0.2
 	self:addChild(
-		statusContainer:setMinSize(Unit.w(0.2), 0),
-		mainTextContainer:setGrow(true),
-		Map(dungeon):setMinSize(Unit.w(0.1), Unit.w(0.1))
+		statusContainer:setFixedSize(Unit.w(0.2), Unit.h(h)):setRelPosition(0, 0),
+		mainTextContainer:setFixedSize(Unit.w(0.7), Unit.h(h)):setRelPosition(0.2, 0),
+		Map(dungeon):setFixedSize(Unit.w(0.1), Unit.h(h)):setRelPosition(0.9, 0)
 	)
 
-	self:setMinSize(Vector(Unit.w(1), 0))
-	self:setPosition(Vector(Unit.w(0.5), Unit.h(1)))
+	self:setMinSize(Vector(Unit.w(1), Unit.h(h)))
+	self:setPosition(Vector(0, Unit.h(1 - h)))
 end
 
 function MainContainer:showNoEvents()
@@ -66,11 +68,12 @@ function MainContainer:showInventoryActions(show)
 end
 
 function MainContainer:showEnemyEvent(enemy)
+	self:showNoEvents()
 	mainTextContainer:addChild(Label('You encounter a ' .. enemy:getType() .. '. '))
 end
 
 function MainContainer:showLootEvent(items)
-	mainTextContainer:clearChildren()
+	self:showNoEvents()
 	mainTextContainer:addChild(Label('You found a '))
 
 	for i, item in ipairs(items) do
@@ -85,22 +88,30 @@ function MainContainer:showLootEvent(items)
 end
 
 function MainContainer:_pickupItem(item)
-	mainTextContainer:clearChildren()
+	self:showNoEvents()
 	mainTextContainer:addChild(Label('You picked up a ' .. item:getType() .. '.'))
 	self.onItemPickup:emit(item)
 end
 
 function MainContainer:showPlayerAttack(dmg)
+	self:showNoEvents()
 	mainTextContainer:addChild(Label('You deal ' .. dmg .. ' damage. '))
 end
 
 function MainContainer:showEnemyKilled(enemy)
+	self:showNoEvents()
 	mainTextContainer:addChild(Label('You killed the ' .. enemy:getType() .. '.'))
 end
 
 function MainContainer:showEnemyAttack(enemy)
+	self:showNoEvents()
 	local enemy_dmg = enemy:getAttack()
 	mainTextContainer:addChild(Label('The ' .. enemy:getType() .. ' attacks you and deals ' .. enemy_dmg .. ' damage.'))
+end
+
+function MainContainer:showEnemyAttackMissed(enemy)
+	self:showNoEvents()
+	mainTextContainer:addChild(Label('The ' .. enemy:getType() .. ' attacks you and missed.'))
 end
 
 return MainContainer

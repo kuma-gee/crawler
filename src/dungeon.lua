@@ -23,6 +23,7 @@ end
 function Dungeon:new(w, h, player)
 	self.onNewRoom = Signal()
 	self.onRoomEnter = Signal()
+	self.onMove = Signal()
 
 	self.map = _setupMap(w, h)
 	self.pos = _randomStart(w, h)
@@ -46,6 +47,7 @@ function Dungeon:move(dir)
 		local new_pos = self.pos + dir
 		if self:_isInside(new_pos) then
 			self.pos = new_pos
+			self.onMove:emit(dir)
 
 			local room = self:activeRoom()
 			if room == nil then
@@ -60,6 +62,10 @@ end
 
 function Dungeon:activeRoom()
 	return self:_getRoom(self.pos)
+end
+
+function Dungeon:getRoomInDir(dir)
+	return self:_getRoom(self.pos + dir)
 end
 
 function Dungeon:_getRoom(pos)

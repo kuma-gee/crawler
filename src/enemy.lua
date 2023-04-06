@@ -51,6 +51,16 @@ function Enemy:draw()
 	self._sprite:draw()
 end
 
+function Enemy:doAttack(dodge_chance)
+	local rand = math.random(0, 100)
+	local hit_chance = 100 - (dodge_chance or 0) -- TODO: different hit chance for different enemies
+	if rand <= hit_chance then
+		return self._attack
+	end
+
+	return nil
+end
+
 function Enemy:getAttack()
 	return self._attack
 end

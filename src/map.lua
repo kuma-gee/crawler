@@ -11,7 +11,7 @@ local floorColor = { 1, 1, 1, 0.3 }
 local roomSize = 15
 
 function Map:new(dungeon)
-	Map.super.new(self, Vector.ZERO)
+	Map.super.new(self)
 	self._dungeon = dungeon
 end
 
@@ -72,10 +72,6 @@ function Map:_drawEvents(room, center, isActive)
 			end)
 		end
 	end
-end
-
-function Map:setPosition(pos)
-	Map.super.setPosition(self, pos - self:getTopLeftCorner())
 end
 
 function Map:drawLocal()

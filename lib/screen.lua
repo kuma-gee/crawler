@@ -4,8 +4,9 @@ local ResizeEvent = require 'lib.input.resize-event'
 local Node = require 'lib.node'
 local Screen = Node:extend()
 
-function Screen:new(w, h, pixel)
+function Screen:new(pixel)
 	Screen.super.new(self)
+	local w, h = love.window.getMode()
 
 	if pixel then
 		love.graphics.setDefaultFilter("nearest", "nearest")

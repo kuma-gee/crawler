@@ -9,10 +9,6 @@ function Input:new()
 	self.onInput = Signal()
 end
 
-function Input:load()
-	self:resize(Unit.getScreenSize())
-end
-
 function Input:mousepressed(x, y, button)
 	self.onInput:emit(MouseButtonEvent(button, true))
 end

@@ -71,6 +71,11 @@ function Node2D:getPosition(p)
 	return Vector(self:getLocalTransform():transformPoint(pos.x, pos.y))
 end
 
+function Node2D:setRelPosition(x, y)
+	self:setPosition(Vector(Unit.w(x), Unit.h(y)))
+	return self
+end
+
 function Node2D:setPosition(pos)
 	local curr = self:getPosition()
 	local rel = pos - curr

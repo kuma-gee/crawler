@@ -6,8 +6,9 @@ local defaultTheme = { background = { 0, 0, 0, 0 } }
 function Control:new(anchor)
 	Control.super.new(self)
 	self._anchor = (anchor or Vector.TOP_LEFT):normalizedInGrid()
-	self._size = Vector(0, 0)
-	self._minSize = Vector(0, 0)
+	self._size = Vector.ZERO
+	self._minSize = Vector.ZERO
+	self._maxSize = Vector.ZERO
 	self._logger = Logger.new('Control')
 	self._theme = defaultTheme
 
@@ -37,7 +38,13 @@ function Control:getMinSize()
 end
 
 function Control:getSize()
-	return self:getMinSize():maximize(self._size)
+	local max = self._maxSize
+	local size = self:getMinSize():max(self._size)
+	if max:len2() > 0 then
+		size = size:min(max)
+	end
+
+	return size
 end
 
 function Control:setSize(size, y)
@@ -51,6 +58,10 @@ function Control:setSize(size, y)
 	return self
 end
 
+function Control:setFixedSize(size, y)
+	return self:setMinSize(size, y):setMaxSize(size, y)
+end
+
 function Control:setMinSize(size, y)
 	if Vector.isvector(size) and size.x >= 0 and size.y >= 0 then
 		self._minSize = size
@@ -58,6 +69,17 @@ function Control:setMinSize(size, y)
 		self._minSize = Vector(size, y)
 	else
 		self._logger:warn('Invalid value for min size: ' .. tostring(size))
+	end
+	return self
+end
+
+function Control:setMaxSize(size, y)
+	if Vector.isvector(size) and size.x >= 0 and size.y >= 0 then
+		self._maxSize = size
+	elseif size ~= nil and y ~= nil and size >= 0 and y >= 0 then
+		self._maxSize = Vector(size, y)
+	else
+		self._logger:warn('Invalid value for max size: ' .. tostring(size))
 	end
 	return self
 end

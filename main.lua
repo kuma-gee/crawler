@@ -8,16 +8,14 @@ local Test   = require 'test.test'
 
 Logger.setLoggingLevel(Logger.Level.DEBUG)
 
-local root = Screen(1920 / 10, 1080 / 10, true):addChild(Game())
+local root = Screen(true):addChild(Game())
 
 function love.load()
     love.graphics.setNewFont('TeenyTinyPixls-o2zo.ttf', 5)
     -- math.randomseed(os.time())
 
     root:load()
-
     Input.onInput:register(function(ev) root:input(ev) end)
-    Input:load()
 end
 
 function love.draw()

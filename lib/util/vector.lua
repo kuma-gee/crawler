@@ -274,10 +274,17 @@ function vector:trimmed(maxLen)
 	return self:clone():trimInplace(maxLen)
 end
 
-function vector:maximize(v)
+function vector:max(v)
 	return Vector(
 		math.max(self.x, v.x),
 		math.max(self.y, v.y)
+	)
+end
+
+function vector:min(v)
+	return Vector(
+		math.min(self.x, v.x),
+		math.min(self.y, v.y)
 	)
 end
 

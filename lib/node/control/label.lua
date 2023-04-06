@@ -31,7 +31,7 @@ function Label:_updateSizeForText()
 	local font = love.graphics.getFont()
 	local size = self:getMinSize()
 
-	self:setMinSize(size:maximize(Vector(font:getWidth(self._text), font:getHeight())))
+	self:setMinSize(size:max(Vector(font:getWidth(self._text), font:getHeight())))
 end
 
 function Label:draw()

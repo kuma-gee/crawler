@@ -18,6 +18,7 @@ function Player:load()
 end
 
 function Player:hurt(dmg)
+	-- TODO: armor
 	self._health = self._health - dmg
 	self:_emitCurrentHealth()
 end

@@ -10,7 +10,7 @@ function Sprite:setImage(img)
     self._image = img
     local size = self:getMinSize()
     local imageSize = Vector(img:getWidth(), img:getHeight())
-    self:setMinSize(size:maximize(imageSize))
+    self:setMinSize(size:max(imageSize))
 end
 
 function Sprite:draw()
