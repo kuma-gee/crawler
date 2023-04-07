@@ -23,6 +23,7 @@ function MainContainer:new(dungeon, player)
 
 	self.onItemPickup = Signal()
 	self.onAttack = Signal()
+	self.onExit = Signal()
 
 	player.onHealthChange:register(function(hp, max_hp)
 		health:setText('HP: ' .. hp .. ' / ' .. max_hp)
@@ -110,6 +111,15 @@ end
 function MainContainer:showEnemyAttackMissed(enemy)
 	self:showNoEvents()
 	mainTextContainer:addChild(Label('The ' .. enemy:getType() .. ' attacks you and missed.'))
+end
+
+function MainContainer:showExitEvent()
+	self:showNoEvents()
+	mainTextContainer:addChild(Label('You found the exit.'))
+
+	local pickupBtn = Button():addChild(Label('Leave'))
+	pickupBtn.onClick:register(function() self.onExit:emit() end)
+	mainTextContainer:addChild(pickupBtn)
 end
 
 return MainContainer

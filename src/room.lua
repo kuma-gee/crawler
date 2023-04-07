@@ -22,6 +22,7 @@ function Room:new(p, d)
 	self.doors = d
 	self._items = {}
 	self._enemy = nil
+	self._exit = false
 end
 
 function Room:canMove(dir)
@@ -73,6 +74,14 @@ function Room:setEnemy(enemy)
 			self._enemy = nil
 		end)
 	end
+end
+
+function Room:setExit()
+	self._exit = true
+end
+
+function Room:isExit()
+	return self._exit
 end
 
 function Room:getEnemy()

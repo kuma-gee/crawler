@@ -1,7 +1,8 @@
 local Control = require 'lib.node.control'
 local Map = Control:extend()
 
-local activeColor = { 0, 1, 0, 1 }
+local activeColor = { 1, 1, 1, 1 }
+local exitColor = { 0, 1, 0, 1 }
 local lootColor = { 0, 0, 1, 1 }
 local enemyColor = { 1, 0, 0, 1 }
 
@@ -62,7 +63,11 @@ function Map:_drawEvents(room, center, isActive)
 			love.graphics.points(center.x, center.y)
 		end)
 	else
-		if room:getEnemy() then
+		if room:isExit() then
+			self:drawInColor(exitColor, function()
+				love.graphics.points(center.x, center.y)
+			end)
+		elseif room:getEnemy() then
 			self:drawInColor(enemyColor, function()
 				love.graphics.points(center.x, center.y)
 			end)

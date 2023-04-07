@@ -35,7 +35,7 @@ end
 
 local function _updateEventChances(ev, dungeon, player)
 	if not foundExit then
-		event_values[Events.Exit] = dungeon:getDiscoveredPercentage() * 100
+		event_values[Events.Exit] = dungeon:getDiscoveredPercentage() * 1000
 	else
 		event_values[Events.Exit] = 0
 	end
@@ -80,4 +80,5 @@ local function getRandomEventAndUpdate(dungeon, player)
 	return ev
 end
 
-return setmetatable({ randomEvent = getRandomEventAndUpdate, Enemy = Events.Enemy, Loot = Events.Loot }, {})
+return setmetatable(
+{ randomEvent = getRandomEventAndUpdate, Enemy = Events.Enemy, Loot = Events.Loot, Exit = Events.Exit }, {})

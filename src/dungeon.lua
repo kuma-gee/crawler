@@ -127,8 +127,8 @@ function Dungeon:getDiscoveredPercentage()
 	local discovered = 0
 	local total = self.size:area()
 
-	for _, row in ipairs(self.map) do
-		for _, room in ipairs(row) do
+	for _, row in pairs(self.map) do
+		for _, room in pairs(row) do
 			if room ~= nil then
 				discovered = discovered + 1
 			end

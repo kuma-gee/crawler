@@ -28,6 +28,12 @@ table.removeValue = function(tab, value)
 	return nil
 end
 
+table.print = function(tab)
+	for k, v in pairs(tab) do
+		print(k, v)
+	end
+end
+
 
 math.tau = math.pi * 2
 
