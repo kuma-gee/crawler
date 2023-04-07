@@ -8,16 +8,14 @@ end
 
 function Sprite:setImage(img)
     self._image = img
-    local size = self:getMinSize()
-    local imageSize = Vector(img:getWidth(), img:getHeight())
-    self:setMinSize(size:max(imageSize))
+    self:setSize(Vector(img:getDimensions()))
 end
 
 function Sprite:draw()
-    Sprite.super.draw(self)
-
     local pos = self:getTopLeftCorner()
     love.graphics.draw(self._image, pos.x, pos.y)
+
+    Sprite.super.draw(self)
 end
 
 return Sprite

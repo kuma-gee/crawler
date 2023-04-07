@@ -1,11 +1,10 @@
 local Button = require 'lib.node.control.button'
 local Label = require 'lib.node.control.label'
-local Control = require 'lib.node.control'
 local Container = require 'lib.node.control.container'
 
 local Map = require 'src.map'
 
-local MainContainer = Control:extend()
+local MainContainer = Container:extend()
 
 local health = Label()
 local inventory = Container(Vector.DOWN):setTheme({ 0, 0.5, 0, 0.5 })
@@ -18,7 +17,7 @@ local statusContainer = Container()
 local mainTextContainer = Container(Vector.RIGHT)
 
 function MainContainer:new(dungeon, player)
-	MainContainer.super.new(self)
+	MainContainer.super.new(self, Vector.RIGHT, Vector.BOT_LEFT)
 	self:setTheme({ background = { 0.5, 0, 0, 0.5 } })
 
 	self.onItemPickup = Signal()
@@ -41,15 +40,13 @@ function MainContainer:new(dungeon, player)
 		end
 	end)
 
-	local h = 0.2
 	self:addChild(
-		statusContainer:setFixedSize(Unit.w(0.19), Unit.h(h - 0.01)):setRelPosition(0.01, 0.01),
-		mainTextContainer:setFixedSize(Unit.w(0.7), Unit.h(h - 0.01)):setRelPosition(0.2, 0.01),
-		Map(dungeon):setFixedSize(Unit.w(0.1), Unit.h(h)):setRelPosition(0.9, 0)
+		statusContainer:setSize(Vector(Unit.w(0.2), 0)),
+		mainTextContainer:setSize(Vector(Unit.w(0.7), 0)),
+		Map(dungeon):setSize(Vector(Unit.w(0.1), Unit.w(0.1)))
 	)
 
-	self:setMinSize(Vector(Unit.w(1), Unit.h(h)))
-	self:setPosition(Vector(0, Unit.h(1 - h)))
+	self:setPosition(Vector(0, Unit.h(1)))
 end
 
 function MainContainer:showNoEvents()

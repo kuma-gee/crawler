@@ -23,15 +23,16 @@ end
 
 function Label:setText(t)
 	self._text = tostring(t)
-	self:setMinSize(Vector.ZERO) -- allow size to shrink
+	-- self:setMinSize(Vector.ZERO) -- allow size to shrink
 	self:_updateSizeForText()
 end
 
 function Label:_updateSizeForText()
 	local font = love.graphics.getFont()
-	local size = self:getMinSize()
+	self:setSize(Vector(font:getWidth(self._text), font:getHeight()))
 
-	self:setMinSize(size:max(Vector(font:getWidth(self._text), font:getHeight())))
+
+	-- self:setMinSize(size:max(Vector(font:getWidth(self._text), font:getHeight())))
 end
 
 function Label:draw()
