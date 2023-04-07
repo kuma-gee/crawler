@@ -1,5 +1,5 @@
 local Enemy = Class:extend()
-local Sprite = require 'lib.node.control.sprite'
+local Sprite = require 'lib.ui.sprite'
 
 local Types = { Bat = 'bat', Goblin = 'goblin', Skeleton = 'skeleton' }
 

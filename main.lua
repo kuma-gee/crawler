@@ -8,7 +8,9 @@ local Test   = require 'test.test'
 
 Logger.setLoggingLevel(Logger.Level.DEBUG)
 
-local root = Screen(true):addChild(Game())
+local root = Screen(true)
+    :addChild(Test())
+-- :addChild(Game())
 
 function love.load()
     love.graphics.setNewFont('TeenyTinyPixls-o2zo.ttf', 5)

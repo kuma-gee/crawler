@@ -4,9 +4,30 @@ local Container = require 'lib.node.control.container'
 local TestObj = require 'test.test-obj'
 local Test = Node:extend()
 
+local Plan = require 'lib.plan'
+local Canvas = require 'lib.canvas'
+local Label = require 'lib.ui.label'
+
 local child = TestObj({ 1, 0, 0, 1 })
 local root = child
 -- :addChild(child)
+
+local Container = Plan.Container:extend()
+
+function Test:new()
+	local canvas = Canvas()
+
+	local container = Container:new(
+		Plan.Rules.new()
+		:addX(Plan.center())
+		:addY(Plan.pixel(20))
+		:addWidth(Plan.aspect(1))
+		:addHeight(Plan.relative(0.33))
+	)
+
+	canvas:addChild(container)
+	self:addChild(canvas)
+end
 
 function Test:load()
 	print('-------------------------- Start Test --------------------------')
