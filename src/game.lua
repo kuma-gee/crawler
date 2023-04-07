@@ -19,7 +19,6 @@ function Game:new()
 
 	self.ui.onItemPickup:register(function(item) self:_pickup(item) end)
 	self.ui.onAttack:register(function(item) self:_attack(item) end)
-	self.ui.onExit:register(function() self:_exit() end)
 
 	self.dungeon.onNewRoom:register(function(room) self:_setNewRoomEvent(room) end)
 	self.dungeon.onRoomEnter:register(function(room) self:_showRoomEvent(room) end)
@@ -27,20 +26,8 @@ function Game:new()
 	self.dungeon:move(Vector.ZERO)
 end
 
-function Game:_exit()
-	self.player:disableInput()
-	self.ui:showNoEvents()
-
-	-- TODO: exit?
-	print('You escaped the dungeon!')
-end
-
 function Game:_showRoomEvent(room, continue)
 	self.ui:showInventoryActions(false)
-
-	if room:isExit() then
-		self.ui:showExitEvent()
-	end
 
 	local enemy = room:getEnemy()
 	if enemy ~= nil then
@@ -64,8 +51,6 @@ function Game:_setNewRoomEvent(room)
 	elseif ev == Event.Enemy then
 		local enemy = Enemy.randomEnemy()
 		room:setEnemy(enemy)
-	elseif ev == Event.Exit then
-		room:setExit()
 	end
 
 	self:_showRoomEvent(room)
