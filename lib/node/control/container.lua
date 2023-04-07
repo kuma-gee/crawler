@@ -48,16 +48,38 @@ end
 -- 	return self._dir:perpendicular():abs()
 -- end
 
+function Container:getSize()
+	local size = Container.super.getSize(self)
+	if self._fixedSize ~= Vector.ZERO then
+		return self._fixedSize:max(size)
+	end
+
+	return size
+end
+
 function Container:_updateSize()
 	local childrenSize = Vector(0, 0)
 	-- local growChildren = {}
+
+	local containerSizeInDir = self._fixedSize:multiply(self._dir)
+	local perpendicularDir = self._dir:perpendicular():abs()
+
 	self:eachVisibleChild(function(child)
 		child:update()
 
 		local childSize = child:getSize()
-		childrenSize = childrenSize + childSize:multiply(self._dir)
+		local growDir = childSize:multiply(self._dir)
 
-		if self._dir * Vector.UP == 0 then
+		if self._fixedSize ~= Vector.ZERO and growDir:len2() > containerSizeInDir:len2() then
+			growDir = containerSizeInDir
+			child:setSize(childSize:multiply(perpendicularDir) + growDir)
+			childSize = child:getSize()
+		end
+
+		childrenSize = childrenSize + growDir
+
+		local isHorizontal = self._dir * Vector.UP == 0
+		if isHorizontal then
 			childrenSize.y = math.max(childrenSize.y, childSize.y)
 		else
 			childrenSize.x = math.max(childrenSize.x, childSize.x)
