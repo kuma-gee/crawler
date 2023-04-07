@@ -11,13 +11,11 @@ local health = Label()
 local inventory = Container(Vector.DOWN):setTheme({ 0, 0.5, 0, 0.5 })
 local inventoryAction = Container(Vector.DOWN):setTheme({ 0, 0.5, 0, 0.5 })
 local statusContainer = Container()
-	:setTheme({ background = { 0, 0.5, 0, 0.5 } })
 	:addChild(health)
 	:addChild(inventory)
 	:addChild(inventoryAction)
 
 local mainTextContainer = Container(Vector.RIGHT)
-	:setTheme({ background = { 0.5, 0.5, 0, 0.5 } })
 
 function MainContainer:new(dungeon, player)
 	MainContainer.super.new(self)
@@ -44,8 +42,8 @@ function MainContainer:new(dungeon, player)
 
 	local h = 0.2
 	self:addChild(
-		statusContainer:setFixedSize(Unit.w(0.2), Unit.h(h)):setRelPosition(0, 0),
-		mainTextContainer:setFixedSize(Unit.w(0.7), Unit.h(h)):setRelPosition(0.2, 0),
+		statusContainer:setFixedSize(Unit.w(0.19), Unit.h(h - 0.01)):setRelPosition(0.01, 0.01),
+		mainTextContainer:setFixedSize(Unit.w(0.7), Unit.h(h - 0.01)):setRelPosition(0.2, 0.01),
 		Map(dungeon):setFixedSize(Unit.w(0.1), Unit.h(h)):setRelPosition(0.9, 0)
 	)
 
