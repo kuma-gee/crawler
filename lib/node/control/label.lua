@@ -1,7 +1,7 @@
 local Control = require 'lib.node.control'
 local Label = Control:extend()
 
-local defaultTheme = { color = { 0, 0, 0, 1 }, background = { 0, 1, 0, 0.5 } }
+local defaultTheme = { color = { 0, 0, 0, 1 }, background = { 0, 0, 0, 0 } }
 
 function Label.setDefaultTheme(theme)
 	defaultTheme = table.merge(defaultTheme, theme)
@@ -54,13 +54,11 @@ function Label:_updateSize()
 	end
 end
 
-function Label:draw()
+function Label:drawLocal()
 	local size = self:getSize()
 	self:drawInColor(self:getTheme().color, function()
 		love.graphics.printf(self._text, 0, 0, size.x, "left")
 	end)
-
-	Label.super.draw(self)
 end
 
 function Label:__tostring()

@@ -32,9 +32,9 @@ function MainContainer:new(dungeon, player)
 		inventoryAction:clearChildren()
 
 		for _, item in ipairs(items) do
-			inventory:addChild(Label(item:getType()))
+			inventory:addChild(item)
 
-			local btn = Button():addChild(Label(item:getType()))
+			local btn = Button():addChild(item)
 			btn.onClick:register(function() self.onAttack:emit(item) end)
 			inventoryAction:addChild(btn)
 		end

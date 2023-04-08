@@ -22,9 +22,9 @@ local enemy_values = {
 }
 
 local enemy_sprites = {
-	[Types.Bat] = Sprite(love.graphics.newImage('assets/Enemy_Bat_0.png', {})),
-	[Types.Goblin] = Sprite(love.graphics.newImage('assets/Enemy_Bat_0.png', {})),
-	[Types.Skeleton] = Sprite(love.graphics.newImage('assets/Enemy_Bat_0.png', {})),
+	[Types.Bat] = love.graphics.newImage('assets/Enemy_Bat_0.png', {}),
+	[Types.Goblin] = love.graphics.newImage('assets/Enemy_Bat_0.png', {}),
+	[Types.Skeleton] = love.graphics.newImage('assets/Enemy_Bat_0.png', {}),
 }
 
 function Enemy:new(type)
@@ -33,7 +33,7 @@ function Enemy:new(type)
 	self._type = type
 	self._attack = enemy_dmg[type]
 	self._health = enemy_health[type]
-	self._sprite = enemy_sprites[type]
+	self._sprite = Sprite(enemy_sprites[type])
 end
 
 function Enemy:load()
